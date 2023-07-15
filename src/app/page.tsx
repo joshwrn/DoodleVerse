@@ -10,6 +10,10 @@ import {
 } from '@react-three/drei'
 import { Canvas, ThreeEvent, useFrame } from '@react-three/fiber'
 import styled from 'styled-components'
+import { Physics, usePlane } from '@react-three/cannon'
+import { Mesh } from 'three'
+import { create } from 'zustand'
+import Player from '@/components/Player'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -32,7 +36,11 @@ const Drawing = styled.div`
 
 const canvasResolution = {
   width: 3000,
-  height: 1500,
+  height: 500,
+}
+const boardDimensions = {
+  width: canvasResolution.width / 10,
+  height: canvasResolution.height / 10,
 }
 
 const DrawingCanvas = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
@@ -104,9 +112,9 @@ const DrawingCanvas = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         <meshStandardMaterial color="red" />
       </mesh> */}
       <mesh
-        scale={[canvasResolution.width / 10, canvasResolution.height / 10, 1]}
+        scale={[boardDimensions.width, boardDimensions.height, 1]}
         onPointerMove={draw}
-        position={[150, 75, 40]}
+        position={[boardDimensions.width / 2, boardDimensions.height / 2, 40]}
         receiveShadow
         castShadow
       >
@@ -144,6 +152,11 @@ export default function Home() {
           azimuth={0.25}
         />
         <DrawingCanvas domNode={domNode} />
+        <Physics>
+          <Player />
+          <Ground />
+        </Physics>
+
         <ambientLight intensity={0.8} />
         <pointLight
           color="white"
@@ -151,16 +164,40 @@ export default function Home() {
           position={[0, 10, 50]}
           intensity={2}
         />
-        <mesh rotation={[-3.14 / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
-          <planeGeometry args={[300, 300]} />
-          <meshStandardMaterial
-            color="rgb(255, 255, 255)"
-            metalness={0}
-            roughness={0}
-            attach="material"
-          />
-        </mesh>
       </Canvas>
     </CanvasContainer>
+  )
+}
+
+export const useObjectStore = create<{
+  objects: Mesh[]
+  addObject: (object: Mesh) => void
+}>((set) => ({
+  objects: [],
+  addObject: (object) => set((s) => ({ objects: [...s.objects, object] })),
+}))
+
+export const Ground = (): React.ReactElement => {
+  const [ref] = usePlane<Mesh>(() => ({
+    rotation: [-Math.PI / 2, 0, 0],
+    position: [100, 0, 0],
+  }))
+  const { addObject } = useObjectStore()
+
+  useEffect(() => {
+    if (!ref.current) return
+    addObject(ref.current)
+  }, [ref])
+
+  return (
+    <mesh ref={ref} receiveShadow>
+      <planeGeometry args={[500, 500]} />
+      <meshStandardMaterial
+        color="rgb(48, 74, 52)"
+        metalness={0}
+        roughness={6}
+        attach="material"
+      />
+    </mesh>
   )
 }
