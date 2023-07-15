@@ -7,8 +7,8 @@ import * as THREE from 'three'
 import type { Mesh } from 'three'
 import { create } from 'zustand'
 
+import { useObjectStore } from '../objects/objects'
 import { isSprinting, useMovementStore } from './controls'
-import { useObjectStore } from '@/app/page'
 import { usePhysicsFrame } from '@/hooks/usePhysicsFrame'
 
 

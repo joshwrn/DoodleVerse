@@ -1,8 +1,6 @@
-import { useRef } from 'react'
-
 import type { SphereProps } from '@react-three/cannon'
 import { useSphere } from '@react-three/cannon'
-import type { Group, Mesh } from 'three'
+import type { Mesh } from 'three'
 
 import { useMovementControls } from '@/state/movement/controls'
 import { useUpdatePlayerPosition } from '@/state/movement/position'
