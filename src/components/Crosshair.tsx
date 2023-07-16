@@ -3,8 +3,7 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { useDrawStore } from '@/state/movement/draw'
-import { MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
-import { CANVAS_TO_BOARD_RATIO } from './Board'
+import { CANVAS_TO_BOARD_RATIO, MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
 
 export const Crosshair: FC = () => {
   const { distance, color, brushSize } = useDrawStore((s) => ({

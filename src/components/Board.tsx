@@ -2,34 +2,25 @@ import React, { useEffect } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { Mesh, Vector3 } from 'three'
 import { useDrawStore } from '@/state/movement/draw'
-import { MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
+import { BOARD_DIMENSIONS, CANVAS_RESOLUTION, CANVAS_TO_BOARD_RATIO, MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
 import { useBox } from '@react-three/cannon'
-import { useAddPhysicsObject } from '@/hooks/useAddPhysicsObject'
+import { IMAGE } from '@/state/image'
 
-export const CANVAS_TO_BOARD_RATIO = 20
-const canvasResolution = {
-  width: 3000,
-  height: 1000,
-}
-const boardDimensions = {
-  width: canvasResolution.width / CANVAS_TO_BOARD_RATIO,
-  height: canvasResolution.height / CANVAS_TO_BOARD_RATIO,
-}
 
-const convertToCanvasCoords = ({ point }: { point: Vector3 }) => {
+const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
   const y2d = point.y * CANVAS_TO_BOARD_RATIO
   const currentPosition = {
-    x: canvasResolution.width - x2d,
-    y: canvasResolution.height - y2d,
+    x: CANVAS_RESOLUTION.width - x2d,
+    y: CANVAS_RESOLUTION.height - y2d,
   }
   return currentPosition
 }
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const [ref] = useBox<Mesh>(() => ({
-    position: [boardDimensions.width / 2, boardDimensions.height / 2, 40],
-    args: [boardDimensions.width, boardDimensions.height, 1],
+    position: [BOARD_DIMENSIONS.width / 2, BOARD_DIMENSIONS.height / 2, 40],
+    args: [BOARD_DIMENSIONS.width, BOARD_DIMENSIONS.height, 1],
     type: `Static`,
   }))
 
@@ -42,13 +33,16 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   }))
 
   useEffect(() => {
+    var img = new Image;
+img.src = IMAGE;
     if (domNode) {
       const ctx = domNode.getContext(`2d`)
       if (ctx) {
-        domNode.width = canvasResolution.width
-        domNode.height = canvasResolution.height
+        domNode.width = CANVAS_RESOLUTION.width
+        domNode.height = CANVAS_RESOLUTION.height
         ctx.fillStyle = `white`
-        ctx.fillRect(0, 0, canvasResolution.width, canvasResolution.height)
+        ctx.fillRect(0, 0, CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
+        ctx.drawImage(img, 0, 0)
       }
     }
   }, [domNode])
@@ -90,7 +84,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
           resetLastPosition()
           return
         }
-        const currentPosition = convertToCanvasCoords({
+        const currentPosition = convertVector3ToCanvasCoords({
           point: e.point,
         })
         ctx.beginPath()
@@ -117,9 +111,11 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
           return
         }
         setDistance(e.distance)
-        const currentPosition = convertToCanvasCoords({
+        const currentPosition = convertVector3ToCanvasCoords({
           point: e.point,
         })
+        const dataurl = domNode.toDataURL()
+        console.log(dataurl)
         ctx.beginPath()
         ctx.lineWidth = brushSize
         ctx.lineCap = `round`
@@ -133,7 +129,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   return (
     <>
       <mesh
-        scale={[boardDimensions.width, boardDimensions.height, 1]}
+        scale={[BOARD_DIMENSIONS.width, BOARD_DIMENSIONS.height, 1]}
         onPointerMove={draw}
         onPointerLeave={onLeave}
         onPointerDown={drawDot}
