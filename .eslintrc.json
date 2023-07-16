@@ -1,26 +1,14 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "next/core-web-vitals"
-  ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "root": true,
+  "plugins": ["unused-imports"],
+  "extends": ["@eyecuelab/react"],
   "rules": {
-    "@typescript-eslint/quotes": ["error", "backtick"],
-    "import/order": [
-      "error",
-      {
-        "pathGroups": [
-          {
-            "pattern": "react",
-            "group": "builtin",
-            "position": "before"
-          }
-        ],
-        "pathGroupsExcludedImportTypes": ["react"]
-      }
-    ]
+    "max-len": "off",
+    "max-lines": "off",
+    // "unused-imports/no-unused-imports-ts": "warn",
+    "unused-imports/no-unused-vars-ts": "warn",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-console": "warn",
+    // "react/no-unknown-property": ["error", { "ignore": ["css", "intensity", "position"] }]
+    "react/no-unknown-property": ["off"]
   }
 }

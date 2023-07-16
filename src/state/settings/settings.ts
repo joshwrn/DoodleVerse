@@ -1,5 +1,5 @@
-import { useHotkeys } from 'react-hotkeys-hook'
 import { create } from 'zustand'
+import { useHotkeys } from 'react-hotkeys-hook'
 
 export const useSettingsStore = create<{
   settingsOpen: boolean

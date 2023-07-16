@@ -82,6 +82,7 @@ export const SettingsOverlay: FC = () => {
               onClick={() => {
                 setSettingsOpen(false)
               }}
+              style={{ cursor: `pointer` }}
             >
               Close
             </p>

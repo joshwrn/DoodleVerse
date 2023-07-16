@@ -17,7 +17,7 @@ export const usePhysicsFrame = (
     delta: number
     timePassed: MutableRefObject<number>
     shouldUpdate: boolean
-  }) => void,
+  }) => void
 ): void => {
   const timePassed = useRef(0)
   useFrame((state, delta) => {

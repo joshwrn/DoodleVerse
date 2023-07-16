@@ -21,7 +21,7 @@ const raycaster = new THREE.Raycaster(
   new THREE.Vector3(),
   new THREE.Vector3(0, -1, 0),
   0,
-  10,
+  10
 )
 
 Globals.assign({
@@ -82,14 +82,18 @@ export const useUpdatePlayerPosition = ({
 
     const isMoving = direction.x !== 0 || direction.z !== 0
     const timeBetweenFootsteps = isSprinting() ? 0.35 : 0.5
-    if (lastFootstep + timeBetweenFootsteps < currentTime && isMoving && !jump) {
+    if (
+      lastFootstep + timeBetweenFootsteps < currentTime &&
+      isMoving &&
+      !jump
+    ) {
       setLastFootstep(currentTime)
     }
 
     // jump
     raycaster.ray.origin.copy(
       playerRef.current?.getWorldPosition(new THREE.Vector3()) ??
-        new THREE.Vector3(),
+        new THREE.Vector3()
     )
     raycaster.ray.origin.y += 6
     const intersections = raycaster.intersectObjects(objects, false)

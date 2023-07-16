@@ -59,7 +59,7 @@ export const useMovementControls = (): void => {
     },
     {
       keydown: true,
-    },
+    }
   )
   useHotkeys(
     [`w`, `s`, `a`, `d`, `space`],
@@ -71,6 +71,6 @@ export const useMovementControls = (): void => {
     },
     {
       keyup: true,
-    },
+    }
   )
 }
