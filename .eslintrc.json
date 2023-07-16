@@ -1,14 +1,6 @@
 {
-  "plugins": ["unused-imports"],
-  "extends": ["@eyecuelab/react"],
+  "extends": "next/core-web-vitals",
   "rules": {
-    "max-len": "off",
-    "max-lines": "off",
-    // "unused-imports/no-unused-imports-ts": "warn",
-    "unused-imports/no-unused-vars-ts": "warn",
-    "@typescript-eslint/ban-ts-comment": "off",
-    "no-console": "warn",
-    // "react/no-unknown-property": ["error", { "ignore": ["css", "intensity", "position"] }]
     "react/no-unknown-property": ["off"]
   }
 }
