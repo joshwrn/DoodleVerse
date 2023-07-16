@@ -11,8 +11,6 @@ import { useObjectStore } from '../objects/objects'
 import { isSprinting, useMovementStore } from './controls'
 import { usePhysicsFrame } from '@/hooks/usePhysicsFrame'
 
-
-
 const SPEED = 20
 const direction = new THREE.Vector3()
 const frontVector = new THREE.Vector3()

@@ -7,6 +7,8 @@ import { Physics } from '@react-three/cannon'
 import Player from '@/components/Player'
 import { Ground } from '@/components/Ground'
 import { Board } from '@/components/Board'
+import { Crosshair } from '@/components/Crosshair'
+import { useMouseDown } from '@/state/movement/draw'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -32,6 +34,7 @@ export default function Home() {
   const onRefChange = useCallback((node: HTMLCanvasElement) => {
     setDomNode(node)
   }, [])
+  useMouseDown()
   return (
     <CanvasContainer>
       <Drawing>
@@ -42,7 +45,7 @@ export default function Home() {
         gl={{ alpha: false }}
         camera={{ fov: 80, position: [50, 15, 0] }}
       >
-        <Environment preset="park" />
+        {/* <Environment preset="park" /> */}
         <color attach="background" args={[`white`]} />
         <PointerLockControls />
         <Sky
@@ -52,7 +55,7 @@ export default function Home() {
           azimuth={0.25}
         />
         <Board domNode={domNode} />
-        <Physics>
+        <Physics gravity={[0, -50, 0]}>
           <Player />
           <Ground />
         </Physics>
@@ -64,6 +67,7 @@ export default function Home() {
           intensity={2}
         />
       </Canvas>
+      <Crosshair />
     </CanvasContainer>
   )
 }

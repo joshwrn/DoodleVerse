@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
+import { useDrawStore } from '@/state/movement/draw'
 
-const ratio = 10
+const ratio = 20
 const canvasResolution = {
   width: 3000,
-  height: 500,
+  height: 1000,
 }
 const boardDimensions = {
   width: canvasResolution.width / ratio,
@@ -13,6 +14,10 @@ const boardDimensions = {
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const textureRef = React.useRef<THREE.CanvasTexture>(null)
+  const { setDistance, mouseDown } = useDrawStore((s) => ({
+    setDistance: s.setDistance,
+    mouseDown: s.mouseDown,
+  }))
   const [pos, setPos] = useState<{
     x: number
     y: number
@@ -43,31 +48,58 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     }
   })
 
+  const lastPosition = React.useRef<{ x: number | null; y: number | null }>({
+    x: null,
+    y: null,
+  })
+
+  const onLeave = () => {
+    lastPosition.current = {
+      x: null,
+      y: null,
+    }
+    setDistance(null)
+  }
+
   const draw = (e: ThreeEvent<PointerEvent>) => {
     if (domNode) {
       const ctx = domNode.getContext(`2d`)
       if (ctx) {
+        if (e.distance > 30) {
+          onLeave()
+          return
+        }
         const position = {
           x: e.point.x,
           y: e.point.y,
           z: e.point.z,
         }
         setPos(position)
+        setDistance(e.distance)
+
+        if (!mouseDown) {
+          lastPosition.current = {
+            x: null,
+            y: null,
+          }
+          return
+        }
         const x2d = e.point.x * ratio
         const y2d = e.point.y * ratio
-        const coord = {
+        const currentPosition = {
           x: canvasResolution.width - x2d,
           y: canvasResolution.height - y2d,
         }
-
-        console.log(e.distance, e.point.x, e.point.y, e.point.z)
         ctx.beginPath()
         ctx.lineWidth = 5
         ctx.lineCap = `round`
         ctx.strokeStyle = `#ee00ff`
-        ctx.moveTo(coord.x, coord.y)
-        // reposition(event)
-        ctx.lineTo(coord.x, coord.y)
+        ctx.moveTo(
+          lastPosition.current.x ?? currentPosition.x,
+          lastPosition.current.y ?? currentPosition.y
+        )
+        lastPosition.current = currentPosition
+        ctx.lineTo(currentPosition.x, currentPosition.y)
         ctx.stroke()
       }
     }
@@ -81,6 +113,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
       <mesh
         scale={[boardDimensions.width, boardDimensions.height, 1]}
         onPointerMove={draw}
+        onPointerLeave={onLeave}
         position={[boardDimensions.width / 2, boardDimensions.height / 2, 40]}
         receiveShadow
         castShadow
