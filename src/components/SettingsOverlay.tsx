@@ -8,7 +8,7 @@ import {
   useSettingsStore,
 } from '@/state/settings/settings'
 
-const Wrapper = styled.div`
+const Backdrop = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -74,45 +74,48 @@ export const SettingsOverlay: FC = () => {
 
   return (
     <>
-      <Wrapper>
-        <Container>
+      <Backdrop
+        onClick={() => {
+          setSettingsOpen(false)
+        }}
+      />
+      <Container>
+        <Row>
+          <h1>Adjust</h1>
+          <p
+            onClick={() => {
+              setSettingsOpen(false)
+            }}
+            style={{ cursor: `pointer` }}
+          >
+            Close
+          </p>
+        </Row>
+        <RowWrapper>
           <Row>
-            <h1>Adjust</h1>
-            <p
-              onClick={() => {
-                setSettingsOpen(false)
-              }}
-              style={{ cursor: `pointer` }}
-            >
-              Close
-            </p>
+            <p>Brush Color</p>
+            <input
+              type="color"
+              id="color"
+              name="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
           </Row>
-          <RowWrapper>
-            <Row>
-              <p>Brush Color</p>
-              <input
-                type="color"
-                id="color"
-                name="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-              />
-            </Row>
-            <Row>
-              <p>Brush Size</p>
-              <input
-                type="range"
-                id="size"
-                name="size"
-                min="3"
-                max="50"
-                value={brushSize}
-                onChange={(e) => setBrushSize(parseInt(e.target.value))}
-              />
-            </Row>
-          </RowWrapper>
-        </Container>
-      </Wrapper>
+          <Row>
+            <p>Brush Size</p>
+            <input
+              type="range"
+              id="size"
+              name="size"
+              min="3"
+              max="50"
+              value={brushSize}
+              onChange={(e) => setBrushSize(parseInt(e.target.value))}
+            />
+          </Row>
+        </RowWrapper>
+      </Container>
     </>
   )
 }

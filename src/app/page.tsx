@@ -47,7 +47,7 @@ export default function Home() {
         gl={{ alpha: false }}
         camera={{
           fov: 80,
-          position: [50, 15, 0],
+          position: [150, 15, 0],
           rotation: [0, Math.PI, 0],
         }}
       >

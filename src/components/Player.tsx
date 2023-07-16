@@ -9,7 +9,7 @@ export default function Player(props: SphereProps): JSX.Element {
   const [playerRef, playerApi] = useSphere<Mesh>(() => ({
     mass: 1,
     type: `Dynamic`,
-    position: [0, 10, 0],
+    position: [75, 10, 0],
     args: [4],
     ...props,
   }))
