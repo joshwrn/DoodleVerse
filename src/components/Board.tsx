@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { useDrawStore } from '@/state/movement/draw'
 
@@ -19,15 +19,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     mouseDown: s.mouseDown,
     color: s.color,
   }))
-  const [pos, setPos] = useState<{
-    x: number
-    y: number
-    z: number
-  }>({
-    x: 0,
-    y: 0,
-    z: 0,
-  })
 
   useEffect(() => {
     if (domNode) {
@@ -54,11 +45,15 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     y: null,
   })
 
-  const onLeave = () => {
+  const resetLastPosition = () => {
     lastPosition.current = {
       x: null,
       y: null,
     }
+  }
+
+  const onLeave = () => {
+    resetLastPosition()
     setDistance(null)
   }
 
@@ -70,19 +65,10 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
           onLeave()
           return
         }
-        const position = {
-          x: e.point.x,
-          y: e.point.y,
-          z: e.point.z,
-        }
-        setPos(position)
         setDistance(e.distance)
 
         if (!mouseDown) {
-          lastPosition.current = {
-            x: null,
-            y: null,
-          }
+          resetLastPosition()
           return
         }
         const x2d = e.point.x * ratio
@@ -107,10 +93,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   }
   return (
     <>
-      {/* <mesh position={[pos.x, pos.y, pos.z]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="red" />
-      </mesh> */}
       <mesh
         scale={[boardDimensions.width, boardDimensions.height, 1]}
         onPointerMove={draw}

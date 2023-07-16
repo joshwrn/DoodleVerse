@@ -9,6 +9,7 @@ import { Ground } from '@/components/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Crosshair'
 import { useMouseDown } from '@/state/movement/draw'
+import { SettingsOverlay } from '@/components/SettingsOverlay'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -20,7 +21,6 @@ const Drawing = styled.div`
   border: 1px solid black;
   color: red;
   position: absolute;
-  z-index: 100;
   pointer-events: none;
   canvas {
     border: 1px solid black;
@@ -37,9 +37,6 @@ export default function Home() {
   useMouseDown()
   return (
     <CanvasContainer>
-      <Drawing>
-        <canvas ref={onRefChange} />
-      </Drawing>
       <Canvas
         shadows
         gl={{ alpha: false }}
@@ -47,7 +44,7 @@ export default function Home() {
       >
         {/* <Environment preset="park" /> */}
         <color attach="background" args={[`white`]} />
-        <PointerLockControls />
+        <PointerLockControls enabled={false} />
         <Sky
           distance={450000}
           sunPosition={[0, 1, 0]}
@@ -68,6 +65,10 @@ export default function Home() {
         />
       </Canvas>
       <Crosshair />
+      <Drawing>
+        <canvas ref={onRefChange} />
+      </Drawing>
+      <SettingsOverlay />
     </CanvasContainer>
   )
 }
