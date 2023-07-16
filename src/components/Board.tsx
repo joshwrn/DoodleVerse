@@ -14,9 +14,10 @@ const boardDimensions = {
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const textureRef = React.useRef<THREE.CanvasTexture>(null)
-  const { setDistance, mouseDown } = useDrawStore((s) => ({
+  const { setDistance, mouseDown, color } = useDrawStore((s) => ({
     setDistance: s.setDistance,
     mouseDown: s.mouseDown,
+    color: s.color,
   }))
   const [pos, setPos] = useState<{
     x: number
@@ -93,7 +94,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         ctx.beginPath()
         ctx.lineWidth = 5
         ctx.lineCap = `round`
-        ctx.strokeStyle = `#ee00ff`
+        ctx.strokeStyle = color
         ctx.moveTo(
           lastPosition.current.x ?? currentPosition.x,
           lastPosition.current.y ?? currentPosition.y

@@ -4,13 +4,21 @@ import { create } from "zustand";
 export const useDrawStore = create<{
     distance: number | null
     setDistance: (distance: number | null) => void
+
     mouseDown: boolean
     setMouseDown: (mouseDown: boolean) => void
+
+    color: string
+    setColor: (color: string) => void
 }>((set) => ({
     distance: 0,
     setDistance: (distance) => set({ distance }),
+
     mouseDown: false,
     setMouseDown: (mouseDown) => set({ mouseDown }),
+
+    color: `#ee00ff`,
+    setColor: (color) => set({ color }),
 }))
 
 export const useMouseDown = () => {
