@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { PointerLockControls, Sky, Environment } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Physics } from '@react-three/cannon'
+import { Debug, Physics } from '@react-three/cannon'
 import Player from '@/components/Player'
 import { Ground } from '@/components/Ground'
 import { Board } from '@/components/Board'
@@ -57,11 +57,12 @@ export default function Home() {
           path="skybox/"
         />
         {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
-        <Board domNode={domNode} />
         <Physics gravity={[0, -50, 0]}>
-          <Player />
+          <Board domNode={domNode} />
           <Ground />
+          <Player />
         </Physics>
+
         <ambientLight intensity={0.2} />
         <pointLight
           color="#ffffff"

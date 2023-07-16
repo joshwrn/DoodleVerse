@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
-import { Vector3 } from 'three'
+import { Mesh, Vector3 } from 'three'
 import { useDrawStore } from '@/state/movement/draw'
 import { MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
+import { useBox } from '@react-three/cannon'
+import { useAddPhysicsObject } from '@/hooks/useAddPhysicsObject'
 
 export const CANVAS_TO_BOARD_RATIO = 20
 const canvasResolution = {
@@ -25,6 +27,12 @@ const convertToCanvasCoords = ({ point }: { point: Vector3 }) => {
 }
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
+  const [ref] = useBox<Mesh>(() => ({
+    position: [boardDimensions.width / 2, boardDimensions.height / 2, 40],
+    args: [boardDimensions.width, boardDimensions.height, 1],
+    type: `Static`,
+  }))
+
   const textureRef = React.useRef<THREE.CanvasTexture>(null)
   const { setDistance, mouseDown, color, brushSize } = useDrawStore((s) => ({
     setDistance: s.setDistance,
@@ -129,9 +137,9 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         onPointerMove={draw}
         onPointerLeave={onLeave}
         onPointerDown={drawDot}
-        position={[boardDimensions.width / 2, boardDimensions.height / 2, 40]}
         receiveShadow
         castShadow
+        ref={ref}
       >
         <boxGeometry />
         <meshStandardMaterial metalness={0} roughness={0.6}>
