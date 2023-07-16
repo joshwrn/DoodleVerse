@@ -4,19 +4,19 @@ import { Vector3 } from 'three'
 import { useDrawStore } from '@/state/movement/draw'
 import { MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
 
-const ratio = 20
+export const CANVAS_TO_BOARD_RATIO = 20
 const canvasResolution = {
   width: 3000,
   height: 1000,
 }
 const boardDimensions = {
-  width: canvasResolution.width / ratio,
-  height: canvasResolution.height / ratio,
+  width: canvasResolution.width / CANVAS_TO_BOARD_RATIO,
+  height: canvasResolution.height / CANVAS_TO_BOARD_RATIO,
 }
 
 const convertToCanvasCoords = ({ point }: { point: Vector3 }) => {
-  const x2d = point.x * ratio
-  const y2d = point.y * ratio
+  const x2d = point.x * CANVAS_TO_BOARD_RATIO
+  const y2d = point.y * CANVAS_TO_BOARD_RATIO
   const currentPosition = {
     x: canvasResolution.width - x2d,
     y: canvasResolution.height - y2d,
@@ -41,8 +41,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         domNode.height = canvasResolution.height
         ctx.fillStyle = `white`
         ctx.fillRect(0, 0, canvasResolution.width, canvasResolution.height)
-        ctx.fillStyle = `rgb(200, 0, 0)`
-        ctx.fillRect(0, 0, 50, 50)
       }
     }
   }, [domNode])
@@ -136,7 +134,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         castShadow
       >
         <boxGeometry />
-        <meshStandardMaterial metalness={0.2} roughness={0.1}>
+        <meshStandardMaterial metalness={0} roughness={0.6}>
           <canvasTexture attach="map" ref={textureRef} image={domNode} />
         </meshStandardMaterial>
       </mesh>

@@ -104,8 +104,8 @@ export const SettingsOverlay: FC = () => {
                 type="range"
                 id="size"
                 name="size"
-                min="1"
-                max="100"
+                min="3"
+                max="50"
                 value={brushSize}
                 onChange={(e) => setBrushSize(parseInt(e.target.value))}
               />

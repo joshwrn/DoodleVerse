@@ -4,6 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { useDrawStore } from '@/state/movement/draw'
 import { MAX_DISTANCE_FROM_BOARD } from '@/state/constants'
+import { CANVAS_TO_BOARD_RATIO } from './Board'
 
 export const Crosshair: FC = () => {
   const { distance, color, brushSize } = useDrawStore((s) => ({
@@ -13,7 +14,7 @@ export const Crosshair: FC = () => {
   }))
   const dis = distance ?? MAX_DISTANCE_FROM_BOARD
   const playerIsTooFar = dis >= MAX_DISTANCE_FROM_BOARD
-  const size = (brushSize * 20) / dis
+  const size = (brushSize * CANVAS_TO_BOARD_RATIO) / dis
   return (
     <CrosshairContainer>
       <div

@@ -17,9 +17,9 @@ export const Ground = (): React.ReactElement => {
 
   return (
     <mesh ref={ref} receiveShadow>
-      <planeGeometry args={[500, 500]} />
+      <planeGeometry args={[250, 250]} />
       <meshStandardMaterial
-        color="rgb(48, 74, 52)"
+        color="rgb(156, 156, 156)"
         metalness={0}
         roughness={6}
         attach="material"

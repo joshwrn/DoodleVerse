@@ -11,6 +11,7 @@ import { Crosshair } from '@/components/Crosshair'
 import { useMouseDown } from '@/state/movement/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
+import { SkyBox } from '@/components/Skybox'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -44,27 +45,28 @@ export default function Home() {
       <Canvas
         shadows
         gl={{ alpha: false }}
-        camera={{ fov: 80, position: [50, 15, 0] }}
+        camera={{
+          fov: 80,
+          position: [50, 15, 0],
+          rotation: [0, Math.PI, 0],
+        }}
       >
-        {/* <Environment preset="park" /> */}
-        <color attach="background" args={[`white`]} />
-        {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
-        <Sky
-          distance={450000}
-          sunPosition={[0, 1, 0]}
-          inclination={0}
-          azimuth={0.25}
+        <SkyBox />
+        <Environment
+          files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
+          path="skybox/"
         />
+        {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
         <Board domNode={domNode} />
         <Physics gravity={[0, -50, 0]}>
           <Player />
           <Ground />
         </Physics>
-        <ambientLight intensity={0.8} />
+        <ambientLight intensity={0.2} />
         <pointLight
-          color="white"
+          color="#ffffff"
           castShadow
-          position={[0, 10, 50]}
+          position={[100, 30, 20]}
           intensity={2}
         />
       </Canvas>

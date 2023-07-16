@@ -1,1 +1,1 @@
-export const MAX_DISTANCE_FROM_BOARD = 30
+export const MAX_DISTANCE_FROM_BOARD = 50
