@@ -10,6 +10,7 @@ import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Crosshair'
 import { useMouseDown } from '@/state/movement/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
+import { useSettingsStore } from '@/state/settings/settings'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -35,6 +36,9 @@ export default function Home() {
     setDomNode(node)
   }, [])
   useMouseDown()
+  const { settingsOpen } = useSettingsStore((s) => ({
+    settingsOpen: s.settingsOpen,
+  }))
   return (
     <CanvasContainer>
       <Canvas
@@ -44,7 +48,7 @@ export default function Home() {
       >
         {/* <Environment preset="park" /> */}
         <color attach="background" args={[`white`]} />
-        <PointerLockControls enabled={false} />
+        {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
         <Sky
           distance={450000}
           sunPosition={[0, 1, 0]}

@@ -10,6 +10,9 @@ export const useDrawStore = create<{
 
     color: string
     setColor: (color: string) => void
+
+    brushSize: number
+    setBrushSize: (brushSize: number) => void
 }>((set) => ({
     distance: 0,
     setDistance: (distance) => set({ distance }),
@@ -19,11 +22,13 @@ export const useDrawStore = create<{
 
     color: `#ee00ff`,
     setColor: (color) => set({ color }),
+
+    brushSize: 5,
+    setBrushSize: (brushSize) => set({ brushSize }),
 }))
 
 export const useMouseDown = () => {
-    const { mouseDown, setMouseDown } = useDrawStore((s) => ({
-        mouseDown: s.mouseDown,
+    const { setMouseDown } = useDrawStore((s) => ({
         setMouseDown: s.setMouseDown,
     }))
     useEffect(() => {
