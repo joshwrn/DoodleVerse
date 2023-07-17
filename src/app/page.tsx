@@ -1,9 +1,9 @@
 'use client'
 import { useCallback, useState } from 'react'
-import { PointerLockControls, Sky, Environment } from '@react-three/drei'
+import { PointerLockControls, Environment } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Debug, Physics } from '@react-three/cannon'
+import { Physics } from '@react-three/cannon'
 import Player from '@/components/Player'
 import { Ground } from '@/components/Ground'
 import { Board } from '@/components/Board'
@@ -12,6 +12,7 @@ import { useMouseDown } from '@/state/movement/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
+import { Railing } from '@/components/Railing'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -24,6 +25,7 @@ const Drawing = styled.div`
   color: red;
   position: absolute;
   pointer-events: none;
+  z-index: -1;
   canvas {
     border: 1px solid black;
     width: 300px;

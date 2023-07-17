@@ -1,8 +1,4 @@
 import { useThree } from '@react-three/fiber'
-import type { FC } from 'react'
-import React from 'react'
-
-import styled from 'styled-components'
 import { CubeTextureLoader } from 'three'
 
 export function SkyBox() {

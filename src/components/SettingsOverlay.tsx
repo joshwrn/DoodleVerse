@@ -7,8 +7,9 @@ import {
   useSettingsControls,
   useSettingsStore,
 } from '@/state/settings/settings'
+import { AnimatePresence, motion } from 'framer-motion'
 
-const Backdrop = styled.div`
+const Backdrop = styled(motion.div)`
   position: absolute;
   top: 0;
   left: 0;
@@ -17,7 +18,7 @@ const Backdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.25);
 `
 
-const Container = styled.div`
+const Container = styled(motion.div)`
   position: absolute;
   bottom: 50px;
   left: 50%;
@@ -70,52 +71,61 @@ export const SettingsOverlay: FC = () => {
     settingsOpen: s.settingsOpen,
   }))
 
-  if (!settingsOpen) return null
-
   return (
-    <>
-      <Backdrop
-        onClick={() => {
-          setSettingsOpen(false)
-        }}
-      />
-      <Container>
-        <Row>
-          <h1>Adjust</h1>
-          <p
+    <AnimatePresence>
+      {settingsOpen && (
+        <>
+          <Backdrop
             onClick={() => {
               setSettingsOpen(false)
             }}
-            style={{ cursor: `pointer` }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+          />
+          <Container
+            animate={{ y: 0, opacity: 1, x: `-50%` }}
+            exit={{ y: `100%`, opacity: 0, x: `-50%` }}
+            initial={{ y: `100%`, opacity: 0, x: `-50%` }}
           >
-            Close
-          </p>
-        </Row>
-        <RowWrapper>
-          <Row>
-            <p>Brush Color</p>
-            <input
-              type="color"
-              id="color"
-              name="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </Row>
-          <Row>
-            <p>Brush Size</p>
-            <input
-              type="range"
-              id="size"
-              name="size"
-              min="3"
-              max="50"
-              value={brushSize}
-              onChange={(e) => setBrushSize(parseInt(e.target.value))}
-            />
-          </Row>
-        </RowWrapper>
-      </Container>
-    </>
+            <Row>
+              <h1>Adjust</h1>
+              <p
+                onClick={() => {
+                  setSettingsOpen(false)
+                }}
+                style={{ cursor: `pointer` }}
+              >
+                Close
+              </p>
+            </Row>
+            <RowWrapper>
+              <Row>
+                <p>Brush Color</p>
+                <input
+                  type="color"
+                  id="color"
+                  name="color"
+                  value={color}
+                  onChange={(e) => setColor(e.target.value)}
+                />
+              </Row>
+              <Row>
+                <p>Brush Size</p>
+                <input
+                  type="range"
+                  id="size"
+                  name="size"
+                  min="3"
+                  max="50"
+                  value={brushSize}
+                  onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                />
+              </Row>
+            </RowWrapper>
+          </Container>
+        </>
+      )}
+    </AnimatePresence>
   )
 }
