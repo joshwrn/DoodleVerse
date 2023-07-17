@@ -33,8 +33,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   }))
 
   useEffect(() => {
-    var img = new Image;
-img.src = IMAGE;
+    
     if (domNode) {
       const ctx = domNode.getContext(`2d`)
       if (ctx) {
@@ -42,7 +41,12 @@ img.src = IMAGE;
         domNode.height = CANVAS_RESOLUTION.height
         ctx.fillStyle = `white`
         ctx.fillRect(0, 0, CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
+        var img = new Image;
         ctx.drawImage(img, 0, 0)
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = IMAGE;
       }
     }
   }, [domNode])
