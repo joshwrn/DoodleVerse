@@ -35,7 +35,10 @@ export default function handler(
   }
 
   const io = new Server<SocketClientToServer, SocketServerToClient>(
-    res?.socket?.server
+    res?.socket?.server,
+    {
+      addTrailingSlash: false,
+    }
   )
   res.socket.server.io = io
 
