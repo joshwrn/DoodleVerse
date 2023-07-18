@@ -1,4 +1,5 @@
 import { MyServer, MySocket } from '@/pages/api/socket'
+import { CanvasRenderingContext2D } from 'canvas'
 
 export type Point2d = {
   x: number
@@ -17,9 +18,20 @@ export type MakeBrushStroke = {
   userId: string
 }
 
-export const makeBrushStroke = (socket: MySocket, io: MyServer): void => {
-  console.log('makeBrushStroke')
-  socket.on(`brushStroke`, (data) => {
-    io.sockets.emit(`brushStroke`, data)
+export const makeBrushStroke = (
+  socket: MySocket,
+  io: MyServer,
+  ctx: CanvasRenderingContext2D
+): void => {
+  socket.on(`makeBrushStroke`, (data) => {
+    io.sockets.emit(`makeBrushStroke`, data)
+    const { brushStroke } = data
+    ctx.beginPath()
+    ctx.lineWidth = brushStroke.brushSize
+    ctx.lineCap = `round`
+    ctx.strokeStyle = brushStroke.color
+    ctx.moveTo(brushStroke.from.x, brushStroke.from.y)
+    ctx.lineTo(brushStroke.to.x, brushStroke.to.y)
+    ctx.stroke()
   })
 }

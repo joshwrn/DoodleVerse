@@ -5,13 +5,18 @@ import {
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Socket, ServerOptions } from 'socket.io'
 import { Server } from 'socket.io'
+import { createCanvas } from 'canvas'
+import { CANVAS_RESOLUTION } from '@/state/constants'
+
+const canvas = createCanvas(CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
+const ctx = canvas.getContext('2d')
 
 export type SocketClientToServer = {
-  brushStroke: (data: MakeBrushStroke) => void
+  makeBrushStroke: (data: MakeBrushStroke) => void
 }
 export type SocketServerToClient = {
-  canvas: (data: string) => void
-  brushStroke: (data: MakeBrushStroke) => void
+  loadCanvas: (data: string) => void
+  makeBrushStroke: (data: MakeBrushStroke) => void
 }
 
 export type MySocket = Socket<SocketClientToServer, SocketServerToClient>
@@ -43,7 +48,8 @@ export default function handler(
   res.socket.server.io = io
 
   const onConnection = (socket: MySocket) => {
-    makeBrushStroke(socket, io)
+    makeBrushStroke(socket, io, ctx)
+    socket.emit(`loadCanvas`, canvas.toDataURL())
   }
 
   io.on(`connection`, onConnection)

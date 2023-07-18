@@ -4,8 +4,10 @@ import { useEffect, useLayoutEffect } from 'react'
 import { Socket } from 'socket.io-client'
 import { io } from 'socket.io-client'
 import { create } from 'zustand'
+import { makeBrushStroke } from './events/client/makeBrushStroke'
+import { loadCanvas } from './events/client/loadCanvas'
 
-type ClientSocket = Socket<SocketServerToClient, SocketClientToServer>
+export type ClientSocket = Socket<SocketServerToClient, SocketClientToServer>
 let socket: ClientSocket
 
 export const useSocketState = create<{
@@ -30,32 +32,15 @@ export const useSockets = ({
   }))
   useLayoutEffect(() => {
     if (!domNode) return
-    socketInitializer()
+    socketInitializer(domNode)
   }, [domNode])
 
-  const socketInitializer = async () => {
+  const socketInitializer = async (canvasNode: HTMLCanvasElement) => {
     await fetch(`/api/socket`)
     socket = io()
     setSocket(socket)
 
-    socket.on('brushStroke', (data) => {
-      console.log('brushStroke', {
-        data,
-        userId,
-      })
-      if (data.userId !== userId) {
-        const ctx = domNode?.getContext('2d')
-        const { brushStroke } = data
-        if (ctx) {
-          ctx.beginPath()
-          ctx.lineWidth = brushStroke.brushSize
-          ctx.lineCap = `round`
-          ctx.strokeStyle = brushStroke.color
-          ctx.moveTo(brushStroke.from.x, brushStroke.from.y)
-          ctx.lineTo(brushStroke.to.x, brushStroke.to.y)
-          ctx.stroke()
-        }
-      }
-    })
+    makeBrushStroke(socket, userId, canvasNode)
+    loadCanvas(socket, canvasNode)
   }
 }

@@ -20,7 +20,7 @@ export const useDrawStore = create<{
   mouseDown: false,
   setMouseDown: (mouseDown) => set({ mouseDown }),
 
-  color: `#ee00ff`,
+  color: `#ff0066`,
   setColor: (color) => set({ color }),
 
   brushSize: 5,

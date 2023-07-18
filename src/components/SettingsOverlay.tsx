@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import React from 'react'
 
 import styled from 'styled-components'
-import { useDrawStore } from '@/state/movement/draw'
+import { useDrawStore } from '@/state/settings/draw'
 import {
   useSettingsControls,
   useSettingsStore,
@@ -117,7 +117,7 @@ export const SettingsOverlay: FC = () => {
                   id="size"
                   name="size"
                   min="3"
-                  max="50"
+                  max="100"
                   value={brushSize}
                   onChange={(e) => setBrushSize(parseInt(e.target.value))}
                 />

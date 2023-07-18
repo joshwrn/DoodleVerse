@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import React from 'react'
 
 import styled from 'styled-components'
-import { useDrawStore } from '@/state/movement/draw'
+import { useDrawStore } from '@/state/settings/draw'
 import {
   CANVAS_TO_BOARD_RATIO,
   MAX_DISTANCE_FROM_BOARD,

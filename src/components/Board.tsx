@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { Mesh, Vector3 } from 'three'
-import { useDrawStore } from '@/state/movement/draw'
+import { useDrawStore } from '@/state/settings/draw'
 import {
   BOARD_DIMENSIONS,
   CANVAS_RESOLUTION,
@@ -9,7 +9,6 @@ import {
   MAX_DISTANCE_FROM_BOARD,
 } from '@/state/constants'
 import { useBox } from '@react-three/cannon'
-import { IMAGE } from '@/state/image'
 import { useSocketState } from '@/server/socket'
 import { usePlayerStore } from '@/state/settings/player'
 
@@ -51,12 +50,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         domNode.height = CANVAS_RESOLUTION.height
         ctx.fillStyle = `white`
         ctx.fillRect(0, 0, CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
-        var img = new Image()
-        ctx.drawImage(img, 0, 0)
-        img.onload = () => {
-          ctx.drawImage(img, 0, 0)
-        }
-        img.src = IMAGE
       }
     }
   }, [domNode])
@@ -84,16 +77,15 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     setDistance(null)
   }
 
-  const checksBeforeDrawing = (e: ThreeEvent<PointerEvent>) => {
-    if (!domNode) return null
-    const ctx = domNode.getContext(`2d`)
+  const checksBeforeDrawing = (e: ThreeEvent<PointerEvent>, stroke: string) => {
+    const ctx = domNode?.getContext(`2d`)
     if (!ctx) return null
     if (e.distance > MAX_DISTANCE_FROM_BOARD) {
       onLeave()
       return null
     }
     setDistance(e.distance)
-    if (!mouseDown) {
+    if (!mouseDown && stroke === 'line') {
       resetLastPosition()
       return null
     }
@@ -103,23 +95,29 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     return { ctx, currentPosition }
   }
 
-  const drawLine = (e: ThreeEvent<PointerEvent>) => {
-    const { ctx, currentPosition } = checksBeforeDrawing(e) ?? {}
+  const drawLine = (e: ThreeEvent<PointerEvent>, stroke: string) => {
+    const { ctx, currentPosition } = checksBeforeDrawing(e, stroke) ?? {}
     if (!ctx || !currentPosition || !socket) return
-    const from = {
-      x: lastPosition.current.x ?? currentPosition.x,
-      y: lastPosition.current.y ?? currentPosition.y,
-    }
+    const from =
+      stroke === 'line'
+        ? {
+            x: lastPosition.current.x ?? currentPosition.x,
+            y: lastPosition.current.y ?? currentPosition.y,
+          }
+        : currentPosition
     ctx.beginPath()
     ctx.lineWidth = brushSize
     ctx.lineCap = `round`
     ctx.strokeStyle = color
     ctx.moveTo(from.x, from.y)
-    lastPosition.current = currentPosition
     ctx.lineTo(currentPosition.x, currentPosition.y)
     ctx.stroke()
 
-    socket.emit(`brushStroke`, {
+    if (stroke === 'line') {
+      lastPosition.current = currentPosition
+    }
+
+    socket.emit(`makeBrushStroke`, {
       userId,
       brushStroke: {
         to: currentPosition,
@@ -130,26 +128,13 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     })
   }
 
-  const drawDot = (e: ThreeEvent<PointerEvent>) => {
-    const { ctx, currentPosition } = checksBeforeDrawing(e) ?? {}
-    if (!ctx || !currentPosition || !domNode) return
-    const dataurl = domNode.toDataURL()
-    console.log(dataurl)
-    ctx.beginPath()
-    ctx.lineWidth = brushSize
-    ctx.lineCap = `round`
-    ctx.strokeStyle = color
-    ctx.moveTo(currentPosition.x, currentPosition.y)
-    ctx.lineTo(currentPosition.x, currentPosition.y)
-    ctx.stroke()
-  }
   return (
     <>
       <mesh
         scale={[BOARD_DIMENSIONS.width, BOARD_DIMENSIONS.height, 1]}
-        onPointerMove={drawLine}
+        onPointerMove={(e) => drawLine(e, `line`)}
         onPointerLeave={onLeave}
-        onPointerDown={drawDot}
+        onPointerDown={(e) => drawLine(e, 'dot')}
         receiveShadow
         castShadow
         ref={ref}
