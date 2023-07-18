@@ -10,6 +10,7 @@ import {
 } from '@/state/constants'
 import { useBox } from '@react-three/cannon'
 import { IMAGE } from '@/state/image'
+import { useSocketState } from '@/server/socket'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -35,6 +36,8 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     color: s.color,
     brushSize: s.brushSize,
   }))
+
+  const socket = useSocketState((state) => state.socket)
 
   useEffect(() => {
     if (domNode) {
@@ -98,18 +101,28 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
 
   const drawLine = (e: ThreeEvent<PointerEvent>) => {
     const { ctx, currentPosition } = checksBeforeDrawing(e) ?? {}
-    if (!ctx || !currentPosition) return
+    if (!ctx || !currentPosition || !socket) return
+    console.log('huh')
+    const from = {
+      x: lastPosition.current.x ?? currentPosition.x,
+      y: lastPosition.current.y ?? currentPosition.y,
+    }
     ctx.beginPath()
     ctx.lineWidth = brushSize
     ctx.lineCap = `round`
     ctx.strokeStyle = color
-    ctx.moveTo(
-      lastPosition.current.x ?? currentPosition.x,
-      lastPosition.current.y ?? currentPosition.y
-    )
+    ctx.moveTo(from.x, from.y)
     lastPosition.current = currentPosition
     ctx.lineTo(currentPosition.x, currentPosition.y)
     ctx.stroke()
+
+    socket.emit(`brushStroke`, {
+      userId: 'sdfkasd',
+      brushStroke: {
+        to: currentPosition,
+        from: from,
+      },
+    })
   }
 
   const drawDot = (e: ThreeEvent<PointerEvent>) => {

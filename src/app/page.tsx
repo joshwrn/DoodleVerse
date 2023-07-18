@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { PointerLockControls, Environment } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import { SettingsOverlay } from '@/components/SettingsOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
 import { Railing } from '@/components/Railing'
+import { useSockets } from '@/server/socket'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -39,6 +40,7 @@ export default function Home() {
     setDomNode(node)
   }, [])
   useMouseDown()
+  useSockets()
   const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
   }))

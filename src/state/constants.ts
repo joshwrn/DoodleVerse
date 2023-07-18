@@ -1,4 +1,4 @@
-export const MAX_DISTANCE_FROM_BOARD = 50
+export const MAX_DISTANCE_FROM_BOARD = 200
 
 export const CANVAS_TO_BOARD_RATIO = 20
 export const CANVAS_RESOLUTION = {
