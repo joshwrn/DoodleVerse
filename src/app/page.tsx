@@ -40,7 +40,7 @@ export default function Home() {
     setDomNode(node)
   }, [])
   useMouseDown()
-  useSockets()
+  useSockets({ domNode })
   const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
   }))

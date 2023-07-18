@@ -11,6 +11,7 @@ import {
 import { useBox } from '@react-three/cannon'
 import { IMAGE } from '@/state/image'
 import { useSocketState } from '@/server/socket'
+import { usePlayerStore } from '@/state/settings/player'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -35,6 +36,9 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     mouseDown: s.mouseDown,
     color: s.color,
     brushSize: s.brushSize,
+  }))
+  const { userId } = usePlayerStore((s) => ({
+    userId: s.userId,
   }))
 
   const socket = useSocketState((state) => state.socket)
@@ -102,7 +106,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const drawLine = (e: ThreeEvent<PointerEvent>) => {
     const { ctx, currentPosition } = checksBeforeDrawing(e) ?? {}
     if (!ctx || !currentPosition || !socket) return
-    console.log('huh')
     const from = {
       x: lastPosition.current.x ?? currentPosition.x,
       y: lastPosition.current.y ?? currentPosition.y,
@@ -117,10 +120,12 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     ctx.stroke()
 
     socket.emit(`brushStroke`, {
-      userId: 'sdfkasd',
+      userId,
       brushStroke: {
         to: currentPosition,
         from: from,
+        color: color,
+        brushSize: brushSize,
       },
     })
   }

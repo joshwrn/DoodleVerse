@@ -8,6 +8,8 @@ export type Point2d = {
 export type BrushStroke = {
   from: Point2d
   to: Point2d
+  color: string
+  brushSize: number
 }
 
 export type MakeBrushStroke = {
