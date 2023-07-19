@@ -11,6 +11,7 @@ import {
 import { useBox } from '@react-three/cannon'
 import { useSocketState } from '@/server/socket'
 import { usePlayerStore } from '@/state/settings/player'
+import { useImageLoadedStore } from '@/server/events/client/loadCanvas'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -39,20 +40,11 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const { userId } = usePlayerStore((s) => ({
     userId: s.userId,
   }))
+  const { imageLoaded } = useImageLoadedStore((s) => ({
+    imageLoaded: s.imageLoaded,
+  }))
 
   const socket = useSocketState((state) => state.socket)
-
-  useEffect(() => {
-    if (domNode) {
-      const ctx = domNode.getContext(`2d`)
-      if (ctx) {
-        domNode.width = CANVAS_RESOLUTION.width
-        domNode.height = CANVAS_RESOLUTION.height
-        ctx.fillStyle = `white`
-        ctx.fillRect(0, 0, CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
-      }
-    }
-  }, [domNode])
 
   useFrame(() => {
     if (textureRef.current) {
@@ -127,7 +119,6 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
       },
     })
   }
-
   return (
     <>
       <mesh
@@ -140,9 +131,11 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
         ref={ref}
       >
         <boxGeometry />
-        <meshStandardMaterial metalness={0} roughness={0.6}>
-          <canvasTexture attach="map" ref={textureRef} image={domNode} />
-        </meshStandardMaterial>
+        {imageLoaded && (
+          <meshStandardMaterial metalness={0} roughness={0.6}>
+            <canvasTexture attach="map" ref={textureRef} image={domNode} />
+          </meshStandardMaterial>
+        )}
       </mesh>
     </>
   )

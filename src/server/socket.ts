@@ -23,8 +23,7 @@ export const useSockets = ({
 }: {
   domNode: HTMLCanvasElement | null
 }): void => {
-  const { socket: socketState, setSocket } = useSocketState((state) => ({
-    socket: state.socket,
+  const { setSocket } = useSocketState((state) => ({
     setSocket: state.setSocket,
   }))
   const { userId } = usePlayerStore((state) => ({
@@ -39,7 +38,6 @@ export const useSockets = ({
     await fetch(`/api/socket`)
     socket = io()
     setSocket(socket)
-
     makeBrushStroke(socket, userId, canvasNode)
     loadCanvas(socket, canvasNode)
   }

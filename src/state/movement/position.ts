@@ -98,7 +98,6 @@ export const useUpdatePlayerPosition = ({
     raycaster.ray.origin.y += -2
     const intersections = raycaster.intersectObjects(objects, false)
     const onObject = intersections.length > 0
-    console.log(`onObject`, onObject)
     if (jump && onObject) {
       playerApi.velocity.set(velocity.current[0], 20, velocity.current[2])
     }

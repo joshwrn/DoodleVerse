@@ -12,26 +12,35 @@ import { useMouseDown } from '@/state/settings/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
-import { Railing } from '@/components/Railing'
 import { useSockets } from '@/server/socket'
 import { Roof } from '@/components/Roof/Roof'
+import { motion } from 'framer-motion'
 
 const CanvasContainer = styled.main`
   width: 100vw;
   height: 100vh;
   display: flex;
+  > canvas {
+    position: absolute;
+    z-index: 1;
+  }
 `
 
-const Drawing = styled.div`
-  border: 1px solid black;
-  color: red;
+const Drawing = styled(motion.div)<{ show: boolean }>`
   position: absolute;
   pointer-events: none;
-  z-index: -1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: ${({ show }) => (show ? 1 : -100)};
+  width: fit-content;
+  border: 1px solid red;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid black;
   canvas {
-    border: 1px solid black;
-    width: 300px;
-    height: 150px;
+    display: block;
+    width: 400px;
   }
 `
 
@@ -78,10 +87,10 @@ export default function Home() {
         />
       </Canvas>
       <Crosshair />
-      <Drawing>
+      <SettingsOverlay />
+      <Drawing show={settingsOpen} animate={{ opacity: settingsOpen ? 1 : 0 }}>
         <canvas ref={onRefChange} />
       </Drawing>
-      <SettingsOverlay />
     </CanvasContainer>
   )
 }
