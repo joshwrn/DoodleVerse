@@ -11,6 +11,9 @@ export const useDrawStore = create<{
   color: string
   setColor: (color: string) => void
 
+  colorHistory: string[]
+  setColorHistory: (colorHistory: string[]) => void
+
   brushSize: number
   setBrushSize: (brushSize: number) => void
 }>((set) => ({
@@ -23,7 +26,10 @@ export const useDrawStore = create<{
   color: `#ff0066`,
   setColor: (color) => set({ color }),
 
-  brushSize: 5,
+  colorHistory: [`#ff0066`, `#ff0066`, `#ff0066`, `#ff0066`, `#ff0066`],
+  setColorHistory: (colorHistory) => set({ colorHistory }),
+
+  brushSize: 15,
   setBrushSize: (brushSize) => set({ brushSize }),
 }))
 

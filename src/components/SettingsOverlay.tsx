@@ -26,7 +26,7 @@ const Container = styled(motion.div)`
   width: 50vw;
   min-width: 500px;
   max-width: 700px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 1);
   height: fit-content;
   border-radius: 50px;
   padding: 50px;
@@ -42,34 +42,64 @@ const Row = styled.div`
   align-items: center;
   justify-content: space-between;
   z-index: 1;
-  p {
-    font-size: 16px;
-    font-weight: 600;
-  }
   input {
     cursor: pointer;
   }
+  white-space: nowrap;
 `
 const RowWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+`
+
+const ColorHistory = styled.div`
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  gap: 50px;
+  justify-content: space-between;
+  > div {
+    display: flex;
+    gap: 10px;
+  }
 `
 
 export const SettingsOverlay: FC = () => {
   useSettingsControls()
-  const { color, setColor, brushSize, setBrushSize } = useDrawStore((s) => {
+  const {
+    color,
+    setColor,
+    brushSize,
+    setBrushSize,
+    colorHistory,
+    setColorHistory,
+  } = useDrawStore((s) => {
     return {
       color: s.color,
       setColor: s.setColor,
       brushSize: s.brushSize,
       setBrushSize: s.setBrushSize,
+      colorHistory: s.colorHistory,
+      setColorHistory: s.setColorHistory,
     }
   })
   const { setSettingsOpen, settingsOpen } = useSettingsStore((s) => ({
     setSettingsOpen: s.setSettingsOpen,
     settingsOpen: s.settingsOpen,
   }))
+
+  const updateColorHistory = (color: string) => {
+    if (colorHistory.includes(color)) return
+    const newColorHistory = [...colorHistory]
+    newColorHistory.unshift(color)
+    newColorHistory.pop()
+    setColorHistory(newColorHistory)
+  }
 
   return (
     <AnimatePresence>
@@ -108,8 +138,29 @@ export const SettingsOverlay: FC = () => {
                   name="color"
                   value={color}
                   onChange={(e) => setColor(e.target.value)}
+                  onBlur={(e) => updateColorHistory(e.target.value)}
                 />
               </Row>
+              <ColorHistory>
+                <p>Color History</p>
+                <div>
+                  {colorHistory.map((color, i) => (
+                    <div
+                      key={color + i}
+                      style={{
+                        backgroundColor: color,
+                        width: `20px`,
+                        height: `20px`,
+                        borderRadius: `50%`,
+                        cursor: `pointer`,
+                      }}
+                      onClick={() => {
+                        setColor(color)
+                      }}
+                    />
+                  ))}
+                </div>
+              </ColorHistory>
               <Row>
                 <p>Brush Size</p>
                 <input
@@ -117,7 +168,7 @@ export const SettingsOverlay: FC = () => {
                   id="size"
                   name="size"
                   min="3"
-                  max="100"
+                  max="300"
                   value={brushSize}
                   onChange={(e) => setBrushSize(parseInt(e.target.value))}
                 />

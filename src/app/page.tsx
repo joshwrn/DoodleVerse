@@ -15,6 +15,7 @@ import { SkyBox } from '@/components/Skybox'
 import { useSockets } from '@/server/socket'
 import { Roof } from '@/components/Roof/Roof'
 import { motion } from 'framer-motion'
+import { Hud } from '@/components/Hud'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -58,7 +59,13 @@ export default function Home() {
     <CanvasContainer>
       <Canvas
         shadows
-        gl={{ alpha: false }}
+        gl={{
+          powerPreference: 'high-performance',
+          antialias: false,
+          stencil: false,
+          depth: false,
+          alpha: false,
+        }}
         camera={{
           fov: 80,
           position: [150, 15, 0],
@@ -87,6 +94,7 @@ export default function Home() {
         />
       </Canvas>
       <Crosshair />
+      <Hud />
       <SettingsOverlay />
       <Drawing show={settingsOpen} animate={{ opacity: settingsOpen ? 1 : 0 }}>
         <canvas ref={onRefChange} />
