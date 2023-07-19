@@ -3,9 +3,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { PointerLockControls, Environment } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Physics } from '@react-three/cannon'
+import { Debug, Physics } from '@react-three/cannon'
 import Player from '@/components/Player'
-import { Ground } from '@/components/Ground'
+import { Ground } from '@/components/Roof/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Crosshair'
 import { useMouseDown } from '@/state/settings/draw'
@@ -14,6 +14,7 @@ import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
 import { Railing } from '@/components/Railing'
 import { useSockets } from '@/server/socket'
+import { Roof } from '@/components/Roof/Roof'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -64,6 +65,7 @@ export default function Home() {
         <Physics gravity={[0, -50, 0]}>
           <Board domNode={domNode} />
           <Ground />
+          <Roof />
           <Player />
         </Physics>
 

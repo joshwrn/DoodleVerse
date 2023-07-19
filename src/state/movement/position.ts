@@ -72,7 +72,7 @@ export const useUpdatePlayerPosition = ({
       direction
         .subVectors(frontVector, sideVector)
         .normalize()
-        .multiplyScalar(SPEED * (isSprinting() ? 1.5 : 1))
+        .multiplyScalar(SPEED * (isSprinting() ? 3 : 2))
         .applyEuler(camera.rotation)
       speed.fromArray(velocity.current)
       playerApi.velocity.set(direction.x, velocity.current[1], direction.z)
@@ -95,11 +95,12 @@ export const useUpdatePlayerPosition = ({
       playerRef.current?.getWorldPosition(new THREE.Vector3()) ??
         new THREE.Vector3()
     )
-    raycaster.ray.origin.y += 6
+    raycaster.ray.origin.y += -2
     const intersections = raycaster.intersectObjects(objects, false)
     const onObject = intersections.length > 0
+    console.log(`onObject`, onObject)
     if (jump && onObject) {
-      playerApi.velocity.set(velocity.current[0], 15, velocity.current[2])
+      playerApi.velocity.set(velocity.current[0], 20, velocity.current[2])
     }
     setPlayerSpeed(speed)
   })

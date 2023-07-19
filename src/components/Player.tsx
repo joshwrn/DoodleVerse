@@ -10,7 +10,7 @@ export default function Player(props: SphereProps): JSX.Element {
     mass: 1,
     type: `Dynamic`,
     position: [75, 10, 0],
-    args: [4],
+    args: [12],
     ...props,
   }))
 
