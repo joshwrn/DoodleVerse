@@ -12,6 +12,7 @@ import { useBox } from '@react-three/cannon'
 import { useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 import { useImageLoadedStore } from '@/server/events/client/loadCanvas'
+import { useSettingsStore } from '@/state/settings/settings'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -43,6 +44,9 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const { imageLoaded } = useImageLoadedStore((s) => ({
     imageLoaded: s.imageLoaded,
   }))
+  const { settingsOpen } = useSettingsStore((s) => ({
+    settingsOpen: s.settingsOpen,
+  }))
 
   const socket = useSocketState((state) => state.socket)
 
@@ -70,6 +74,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   }
 
   const checksBeforeDrawing = (e: ThreeEvent<PointerEvent>, stroke: string) => {
+    if (settingsOpen) return null
     const ctx = domNode?.getContext(`2d`)
     if (!ctx) return null
     if (e.distance > MAX_DISTANCE_FROM_BOARD) {

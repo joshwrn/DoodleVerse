@@ -155,6 +155,10 @@ export const SettingsOverlay: FC<{
               animate={{ y: 0, opacity: 1, x: `-50%` }}
               exit={{ y: `100%`, opacity: 0, x: `-50%` }}
               initial={{ y: `100%`, opacity: 0, x: `-50%` }}
+              onClick={(e) => {
+                e.stopPropagation()
+                e.nativeEvent.stopImmediatePropagation()
+              }}
             >
               <Row
                 style={{

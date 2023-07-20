@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { PointerLockControls, Environment } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
@@ -31,9 +31,20 @@ export default function Home() {
   const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
   useSockets({ domNode })
-  const { settingsOpen } = useSettingsStore((s) => ({
+  const { settingsOpen, setSettingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
+    setSettingsOpen: s.setSettingsOpen,
   }))
+  const lockRef = useRef<any>(null)
+  useEffect(() => {
+    if (!lockRef.current) return
+    if (settingsOpen) {
+      lockRef.current.unlock()
+    }
+    if (!settingsOpen) {
+      lockRef.current.lock()
+    }
+  }, [settingsOpen])
   return (
     <CanvasContainer>
       <Canvas
@@ -55,14 +66,13 @@ export default function Home() {
           path="skybox/"
           blur={100}
         />
-        {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
+        <PointerLockControls ref={lockRef} />
         <Physics gravity={[0, -50, 0]}>
           <Board domNode={domNode} />
           <Ground />
           <Roof />
           <Player />
         </Physics>
-
         <ambientLight intensity={0.2} />
         <pointLight
           color="#ffffff"

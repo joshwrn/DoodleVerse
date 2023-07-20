@@ -15,7 +15,7 @@ export const useSettingsControls = () => {
     settingsOpen: s.settingsOpen,
   }))
   useHotkeys(
-    [`escape`],
+    [`tab`],
     (e) => {
       e.preventDefault()
       setSettingsOpen(!settingsOpen)

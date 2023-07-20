@@ -92,7 +92,7 @@ export const Hud: FC = () => {
     <Wrapper>
       <SettingsContainer>
         <PiPaintBrushDuotone />
-        <p>ESC</p>
+        <p>TAB</p>
       </SettingsContainer>
       <ControlsContainer>
         <div>
