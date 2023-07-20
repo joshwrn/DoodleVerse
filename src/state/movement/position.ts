@@ -8,7 +8,7 @@ import type { Mesh } from 'three'
 import { create } from 'zustand'
 
 import { useObjectStore } from '../objects/objects'
-import { isSprinting, useMovementStore } from './controls'
+import { useMovementStore } from './controls'
 import { usePhysicsFrame } from '@/hooks/usePhysicsFrame'
 
 const SPEED = 20
@@ -47,7 +47,9 @@ export const useUpdatePlayerPosition = ({
   playerRef: React.RefObject<Mesh>
   playerApi: PublicApi
 }): void => {
-  const { forward, backward, left, right, jump } = useMovementStore((s) => s)
+  const { forward, backward, left, right, jump, sprint } = useMovementStore(
+    (s) => s
+  )
   const { camera } = useThree()
   const { objects } = useObjectStore((s) => ({
     objects: s.objects,
@@ -72,7 +74,7 @@ export const useUpdatePlayerPosition = ({
       direction
         .subVectors(frontVector, sideVector)
         .normalize()
-        .multiplyScalar(SPEED * (isSprinting() ? 3 : 2))
+        .multiplyScalar(SPEED * (sprint ? 3 : 2))
         .applyEuler(camera.rotation)
       speed.fromArray(velocity.current)
       playerApi.velocity.set(direction.x, velocity.current[1], direction.z)
@@ -81,7 +83,7 @@ export const useUpdatePlayerPosition = ({
     const currentTime = new Date().getTime() / 1000
 
     const isMoving = direction.x !== 0 || direction.z !== 0
-    const timeBetweenFootsteps = isSprinting() ? 0.35 : 0.5
+    const timeBetweenFootsteps = sprint ? 0.35 : 0.5
     if (
       lastFootstep + timeBetweenFootsteps < currentTime &&
       isMoving &&

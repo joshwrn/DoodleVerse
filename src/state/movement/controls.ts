@@ -7,6 +7,7 @@ export type Movement = {
   left: boolean
   right: boolean
   jump: boolean
+  sprint: boolean
 }
 type MovementKeys = keyof Movement
 
@@ -16,6 +17,7 @@ const KEYS: { [key: string]: MovementKeys } = {
   KeyA: `left`,
   KeyD: `right`,
   Space: `jump`,
+  ShiftLeft: `sprint`,
 }
 type Keys = keyof typeof KEYS
 
@@ -34,6 +36,7 @@ export const useMovementStore = create<{
   left: boolean
   right: boolean
   jump: boolean
+  sprint: boolean
   setMovement: (movement: Partial<Movement>) => void
 }>((set) => ({
   forward: false,
@@ -41,16 +44,15 @@ export const useMovementStore = create<{
   left: false,
   right: false,
   jump: false,
+  sprint: false,
   setMovement: (movement: Partial<Movement>) =>
     set((prev) => ({ ...prev, ...movement })),
 }))
 
-export const isSprinting = (): boolean => isHotkeyPressed(`shift`)
-
 export const useMovementControls = (): void => {
   const [setMovement] = useMovementStore((s) => [s.setMovement])
   useHotkeys(
-    [`w`, `s`, `a`, `d`, `space`],
+    [`w`, `s`, `a`, `d`, `space`, `shift`],
     (e) => {
       const code = keyGuard(e)
       if (!code) return
@@ -62,7 +64,7 @@ export const useMovementControls = (): void => {
     }
   )
   useHotkeys(
-    [`w`, `s`, `a`, `d`, `space`],
+    [`w`, `s`, `a`, `d`, `space`, `shift`],
     (e) => {
       const code = keyGuard(e)
       if (!code) return
