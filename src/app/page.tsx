@@ -31,9 +31,8 @@ export default function Home() {
   const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
   useSockets({ domNode })
-  const { settingsOpen, setSettingsOpen } = useSettingsStore((s) => ({
+  const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
-    setSettingsOpen: s.setSettingsOpen,
   }))
   const lockRef = useRef<any>(null)
   useEffect(() => {
