@@ -32,13 +32,11 @@ const Container = styled(motion.div)`
   padding: 50px;
   color: black;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
-  h1 {
-    padding-bottom: 20px;
-  }
 `
 const Row = styled.div`
   display: flex;
   width: 100%;
+  height: 20px;
   align-items: center;
   justify-content: space-between;
   z-index: 1;
@@ -63,9 +61,17 @@ const ColorHistory = styled.div`
   align-items: center;
   gap: 50px;
   justify-content: space-between;
+  height: 20px;
   > div {
     display: flex;
     gap: 10px;
+    > div {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1px solid black;
+    }
   }
 `
 const Drawing = styled(motion.div)<{ show: boolean }>`
@@ -123,6 +129,14 @@ export const SettingsOverlay: FC<{
     setColorHistory(newColorHistory)
   }
 
+  const pickFromHistory = (color: string) => {
+    setColor(color)
+    const newColorHistory = [...colorHistory]
+    const filtered = newColorHistory.filter((c) => c !== color)
+    filtered.unshift(color)
+    setColorHistory(filtered)
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -142,7 +156,11 @@ export const SettingsOverlay: FC<{
               exit={{ y: `100%`, opacity: 0, x: `-50%` }}
               initial={{ y: `100%`, opacity: 0, x: `-50%` }}
             >
-              <Row>
+              <Row
+                style={{
+                  paddingBottom: `40px`,
+                }}
+              >
                 <h1>Adjust</h1>
                 <p
                   onClick={() => {
@@ -173,14 +191,8 @@ export const SettingsOverlay: FC<{
                         key={color + i}
                         style={{
                           backgroundColor: color,
-                          width: `20px`,
-                          height: `20px`,
-                          borderRadius: `50%`,
-                          cursor: `pointer`,
                         }}
-                        onClick={() => {
-                          setColor(color)
-                        }}
+                        onClick={() => pickFromHistory(color)}
                       />
                     ))}
                   </div>
