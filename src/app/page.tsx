@@ -12,7 +12,7 @@ import { useMouseDown } from '@/state/settings/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
-import { useSockets } from '@/server/socket'
+import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { motion } from 'framer-motion'
 import { Hud } from '@/components/Hud'
@@ -27,29 +27,8 @@ const CanvasContainer = styled.main`
   }
 `
 
-const Drawing = styled(motion.div)<{ show: boolean }>`
-  position: absolute;
-  pointer-events: none;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: ${({ show }) => (show ? 1 : -100)};
-  width: fit-content;
-  border: 1px solid red;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid black;
-  canvas {
-    display: block;
-    width: 400px;
-  }
-`
-
 export default function Home() {
   const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
-  const onRefChange = useCallback((node: HTMLCanvasElement) => {
-    setDomNode(node)
-  }, [])
   useMouseDown()
   useSockets({ domNode })
   const { settingsOpen } = useSettingsStore((s) => ({
@@ -95,10 +74,7 @@ export default function Home() {
       </Canvas>
       <Crosshair />
       <Hud />
-      <SettingsOverlay />
-      <Drawing show={settingsOpen} animate={{ opacity: settingsOpen ? 1 : 0 }}>
-        <canvas ref={onRefChange} />
-      </Drawing>
+      <SettingsOverlay setDomNode={setDomNode} />
     </CanvasContainer>
   )
 }

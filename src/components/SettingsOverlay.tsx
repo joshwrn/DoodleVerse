@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 import styled from 'styled-components'
 import { useDrawStore } from '@/state/settings/draw'
@@ -68,9 +68,31 @@ const ColorHistory = styled.div`
     gap: 10px;
   }
 `
+const Drawing = styled(motion.div)<{ show: boolean }>`
+  position: absolute;
+  pointer-events: none;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+  z-index: ${({ show }) => (show ? 1 : -100)};
+  width: fit-content;
+  border: 1px solid red;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid black;
+  canvas {
+    display: block;
+    width: 400px;
+  }
+`
 
-export const SettingsOverlay: FC = () => {
+export const SettingsOverlay: FC<{
+  setDomNode: (node: HTMLCanvasElement) => void
+}> = ({ setDomNode }) => {
   useSettingsControls()
+  const onRefChange = useCallback((node: HTMLCanvasElement) => {
+    setDomNode(node)
+  }, [])
   const {
     color,
     setColor,
@@ -102,81 +124,87 @@ export const SettingsOverlay: FC = () => {
   }
 
   return (
-    <AnimatePresence>
-      {settingsOpen && (
-        <>
-          <Backdrop
-            onClick={() => {
-              setSettingsOpen(false)
-            }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            initial={{ opacity: 0 }}
-          />
-          <Container
-            animate={{ y: 0, opacity: 1, x: `-50%` }}
-            exit={{ y: `100%`, opacity: 0, x: `-50%` }}
-            initial={{ y: `100%`, opacity: 0, x: `-50%` }}
-          >
-            <Row>
-              <h1>Adjust</h1>
-              <p
-                onClick={() => {
-                  setSettingsOpen(false)
-                }}
-                style={{ cursor: `pointer` }}
-              >
-                Close
-              </p>
-            </Row>
-            <RowWrapper>
+    <>
+      <AnimatePresence>
+        {settingsOpen && (
+          <>
+            <Backdrop
+              onClick={() => {
+                setSettingsOpen(false)
+              }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+            />
+
+            <Container
+              animate={{ y: 0, opacity: 1, x: `-50%` }}
+              exit={{ y: `100%`, opacity: 0, x: `-50%` }}
+              initial={{ y: `100%`, opacity: 0, x: `-50%` }}
+            >
               <Row>
-                <p>Brush Color</p>
-                <input
-                  type="color"
-                  id="color"
-                  name="color"
-                  value={color}
-                  onChange={(e) => setColor(e.target.value)}
-                  onBlur={(e) => updateColorHistory(e.target.value)}
-                />
+                <h1>Adjust</h1>
+                <p
+                  onClick={() => {
+                    setSettingsOpen(false)
+                  }}
+                  style={{ cursor: `pointer` }}
+                >
+                  Close
+                </p>
               </Row>
-              <ColorHistory>
-                <p>Color History</p>
-                <div>
-                  {colorHistory.map((color, i) => (
-                    <div
-                      key={color + i}
-                      style={{
-                        backgroundColor: color,
-                        width: `20px`,
-                        height: `20px`,
-                        borderRadius: `50%`,
-                        cursor: `pointer`,
-                      }}
-                      onClick={() => {
-                        setColor(color)
-                      }}
-                    />
-                  ))}
-                </div>
-              </ColorHistory>
-              <Row>
-                <p>Brush Size</p>
-                <input
-                  type="range"
-                  id="size"
-                  name="size"
-                  min="3"
-                  max="300"
-                  value={brushSize}
-                  onChange={(e) => setBrushSize(parseInt(e.target.value))}
-                />
-              </Row>
-            </RowWrapper>
-          </Container>
-        </>
-      )}
-    </AnimatePresence>
+              <RowWrapper>
+                <Row>
+                  <p>Brush Color</p>
+                  <input
+                    type="color"
+                    id="color"
+                    name="color"
+                    value={color}
+                    onChange={(e) => setColor(e.target.value)}
+                    onBlur={(e) => updateColorHistory(e.target.value)}
+                  />
+                </Row>
+                <ColorHistory>
+                  <p>Color History</p>
+                  <div>
+                    {colorHistory.map((color, i) => (
+                      <div
+                        key={color + i}
+                        style={{
+                          backgroundColor: color,
+                          width: `20px`,
+                          height: `20px`,
+                          borderRadius: `50%`,
+                          cursor: `pointer`,
+                        }}
+                        onClick={() => {
+                          setColor(color)
+                        }}
+                      />
+                    ))}
+                  </div>
+                </ColorHistory>
+                <Row>
+                  <p>Brush Size</p>
+                  <input
+                    type="range"
+                    id="size"
+                    name="size"
+                    min="3"
+                    max="300"
+                    value={brushSize}
+                    onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                  />
+                </Row>
+              </RowWrapper>
+            </Container>
+          </>
+        )}
+      </AnimatePresence>
+      <Drawing show={settingsOpen} animate={{ opacity: settingsOpen ? 1 : 0 }}>
+        <canvas ref={onRefChange} />
+      </Drawing>
+    </>
   )
 }

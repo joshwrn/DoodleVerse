@@ -1,4 +1,4 @@
-import { ClientSocket } from '@/server/socket'
+import { ClientSocket } from '@/server/clientSocket'
 
 // socket: SocketClientToServer["brushStroke"],
 

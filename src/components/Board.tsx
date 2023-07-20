@@ -9,7 +9,7 @@ import {
   MAX_DISTANCE_FROM_BOARD,
 } from '@/state/constants'
 import { useBox } from '@react-three/cannon'
-import { useSocketState } from '@/server/socket'
+import { useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 import { useImageLoadedStore } from '@/server/events/client/loadCanvas'
 

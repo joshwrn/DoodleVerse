@@ -1,4 +1,4 @@
-import { ClientSocket } from '@/server/socket'
+import { ClientSocket } from '@/server/clientSocket'
 import { CANVAS_RESOLUTION } from '@/state/constants'
 import { create } from 'zustand'
 
