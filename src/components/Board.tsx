@@ -132,7 +132,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
       >
         <boxGeometry />
         {imageLoaded && (
-          <meshStandardMaterial metalness={0} roughness={0.6}>
+          <meshStandardMaterial metalness={0} roughness={0}>
             <canvasTexture attach="map" ref={textureRef} image={domNode} />
           </meshStandardMaterial>
         )}

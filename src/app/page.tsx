@@ -40,9 +40,7 @@ export default function Home() {
         shadows
         gl={{
           powerPreference: 'high-performance',
-          antialias: false,
           stencil: false,
-          depth: false,
           alpha: false,
         }}
         camera={{
@@ -55,6 +53,7 @@ export default function Home() {
         <Environment
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
           path="skybox/"
+          blur={100}
         />
         {!settingsOpen && <PointerLockControls enabled={!settingsOpen} />}
         <Physics gravity={[0, -50, 0]}>
@@ -68,8 +67,8 @@ export default function Home() {
         <pointLight
           color="#ffffff"
           castShadow
-          position={[100, 30, 20]}
-          intensity={2}
+          position={[100, 80, 20]}
+          intensity={1.5}
         />
       </Canvas>
       <Crosshair />
