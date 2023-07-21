@@ -7,9 +7,10 @@ import type { Socket, ServerOptions } from 'socket.io'
 import { Server } from 'socket.io'
 import { createCanvas } from 'canvas'
 import { CANVAS_RESOLUTION } from '@/state/constants'
-import moment from 'moment'
 
 import { MongoClient } from 'mongodb'
+import { LoadCanvas } from '@/server/events/server/loadCanvas'
+import { disconnect } from '@/server/events/server/disconnect'
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
@@ -88,35 +89,8 @@ export default async function handler(
     console.log(`Total users: ${totalUsers}`)
 
     makeBrushStroke(socket, io, ctx)
-
-    const LoadCanvas = async () => {
-      let data = canvas.toDataURL()
-      if (io.engine.clientsCount === 1) {
-        const latest = await db
-          .collection('mural-collection')
-          .find({})
-          .sort({ date: -1 })
-          .limit(1)
-          .toArray()
-        if (latest[0]) data = latest[0].data
-      }
-      socket.emit(`loadCanvas`, data)
-    }
-    LoadCanvas()
-
-    socket.on(`disconnect`, async () => {
-      console.log(`Disconnected`)
-      if (io.engine.clientsCount === 0) {
-        const inserted = await db.collection('mural-collection').insertOne({
-          date: new Date(),
-          data: canvas.toDataURL(),
-        })
-        await db.collection('mural-collection').deleteMany({
-          _id: { $ne: inserted.insertedId },
-          date: { $gt: new Date(moment().startOf('day').toDate()) },
-        })
-      }
-    })
+    LoadCanvas(socket, io, canvas, db)
+    disconnect(socket, io, canvas, db)
   }
 
   io.on(`connection`, onConnection)

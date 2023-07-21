@@ -36,13 +36,13 @@ const ControlsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 5px;
   flex-direction: column;
   > div {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 5px;
   }
 `
 const Key = styled.div`
@@ -50,18 +50,18 @@ const Key = styled.div`
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 7px;
+  border-radius: 4px;
   backdrop-filter: blur(10px);
   color: black;
-  padding: 10px;
-  padding-bottom: 15px;
+  padding: 7px;
+  padding-bottom: 10px;
   > div {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 3px;
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
     border: 1px solid black;
     position: relative;
     flex-shrink: 0;
@@ -69,19 +69,9 @@ const Key = styled.div`
       1px 0 1px 0 #eee,
       0 2px 0 2px #ccc,
       0 2px 0 3px #444;
-    /* ::before {
-      content: '';
-      display: block;
-      position: absolute;
-      width: 38px;
-      left: -1px;
-      bottom: -7px;
-      height: 7px;
-      border-radius: 3px;
-      border-bottom: 1px solid black;
-      border-right: 1px solid black;
-      border-left: 1px solid black;
-    } */
+  }
+  p {
+    font-size: 12px;
   }
 `
 
