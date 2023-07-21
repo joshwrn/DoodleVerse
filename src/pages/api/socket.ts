@@ -5,7 +5,7 @@ import {
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Socket, ServerOptions } from 'socket.io'
 import { Server } from 'socket.io'
-import { createCanvas } from 'canvas'
+import { createCanvas, loadImage } from 'canvas'
 import { CANVAS_RESOLUTION } from '@/state/constants'
 
 import { MongoClient } from 'mongodb'
