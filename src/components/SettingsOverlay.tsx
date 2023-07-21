@@ -8,6 +8,7 @@ import {
   useSettingsStore,
 } from '@/state/settings/settings'
 import { AnimatePresence, motion } from 'framer-motion'
+import { ControlsHud } from './ControlsHud'
 
 const Backdrop = styled(motion.div)`
   position: absolute;
@@ -19,10 +20,6 @@ const Backdrop = styled(motion.div)`
 `
 
 const Container = styled(motion.div)`
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translate(-50%, 0);
   width: 50vw;
   min-width: 500px;
   max-width: 700px;
@@ -92,6 +89,19 @@ const Drawing = styled(motion.div)<{ show: boolean }>`
   }
 `
 
+const Wrapper = styled(motion.div)`
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  flex-direction: column;
+  gap: 20px;
+`
+
 export const SettingsOverlay: FC<{
   setDomNode: (node: HTMLCanvasElement) => void
 }> = ({ setDomNode }) => {
@@ -150,8 +160,7 @@ export const SettingsOverlay: FC<{
               exit={{ opacity: 0 }}
               initial={{ opacity: 0 }}
             />
-
-            <Container
+            <Wrapper
               animate={{ y: 0, opacity: 1, x: `-50%` }}
               exit={{ y: `100%`, opacity: 0, x: `-50%` }}
               initial={{ y: `100%`, opacity: 0, x: `-50%` }}
@@ -160,61 +169,64 @@ export const SettingsOverlay: FC<{
                 e.nativeEvent.stopImmediatePropagation()
               }}
             >
-              <Row
-                style={{
-                  paddingBottom: `40px`,
-                }}
-              >
-                <h1>Adjust</h1>
-                <p
-                  onClick={() => {
-                    setSettingsOpen(false)
+              <ControlsHud />
+              <Container>
+                <Row
+                  style={{
+                    paddingBottom: `40px`,
                   }}
-                  style={{ cursor: `pointer` }}
                 >
-                  Close
-                </p>
-              </Row>
-              <RowWrapper>
-                <Row>
-                  <p>Brush Color</p>
-                  <input
-                    type="color"
-                    id="color"
-                    name="color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    onBlur={(e) => updateColorHistory(e.target.value)}
-                  />
+                  <h1>Adjust</h1>
+                  <p
+                    onClick={() => {
+                      setSettingsOpen(false)
+                    }}
+                    style={{ cursor: `pointer` }}
+                  >
+                    Close
+                  </p>
                 </Row>
-                <ColorHistory>
-                  <p>Color History</p>
-                  <div>
-                    {colorHistory.map((color, i) => (
-                      <div
-                        key={color + i}
-                        style={{
-                          backgroundColor: color,
-                        }}
-                        onClick={() => pickFromHistory(color)}
-                      />
-                    ))}
-                  </div>
-                </ColorHistory>
-                <Row>
-                  <p>Brush Size</p>
-                  <input
-                    type="range"
-                    id="size"
-                    name="size"
-                    min="3"
-                    max="300"
-                    value={brushSize}
-                    onChange={(e) => setBrushSize(parseInt(e.target.value))}
-                  />
-                </Row>
-              </RowWrapper>
-            </Container>
+                <RowWrapper>
+                  <Row>
+                    <p>Brush Color</p>
+                    <input
+                      type="color"
+                      id="color"
+                      name="color"
+                      value={color}
+                      onChange={(e) => setColor(e.target.value)}
+                      onBlur={(e) => updateColorHistory(e.target.value)}
+                    />
+                  </Row>
+                  <ColorHistory>
+                    <p>Color History</p>
+                    <div>
+                      {colorHistory.map((color, i) => (
+                        <div
+                          key={color + i}
+                          style={{
+                            backgroundColor: color,
+                          }}
+                          onClick={() => pickFromHistory(color)}
+                        />
+                      ))}
+                    </div>
+                  </ColorHistory>
+                  <Row>
+                    <p>Brush Size</p>
+                    <input
+                      type="range"
+                      id="size"
+                      name="size"
+                      min="3"
+                      max="300"
+                      value={brushSize}
+                      onChange={(e) => setBrushSize(parseInt(e.target.value))}
+                    />
+                  </Row>
+                </RowWrapper>
+              </Container>
+            </Wrapper>
           </>
         )}
       </AnimatePresence>

@@ -1,5 +1,5 @@
 import { MyServer, MySocket } from '@/pages/api/socket'
-import { Canvas } from 'canvas'
+import { Canvas, loadImage } from 'canvas'
 import { Db } from 'mongodb'
 
 export const LoadCanvas = async (
@@ -9,6 +9,7 @@ export const LoadCanvas = async (
   db: Db
 ) => {
   let data = canvas.toDataURL()
+  const ctx = canvas.getContext('2d')
   if (io.engine.clientsCount === 1) {
     const latest = await db
       .collection('mural-collection')
@@ -16,7 +17,12 @@ export const LoadCanvas = async (
       .sort({ date: -1 })
       .limit(1)
       .toArray()
-    if (latest[0]) data = latest[0].data
+    if (latest[0]) {
+      data = latest[0].data
+      loadImage(data).then((image) => {
+        ctx.drawImage(image, 0, 0)
+      })
+    }
   }
   socket.emit(`loadCanvas`, data)
 }
