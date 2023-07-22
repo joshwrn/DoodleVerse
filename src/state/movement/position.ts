@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { Globals } from '@react-spring/three'
 import type { PublicApi } from '@react-three/cannon'
 import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -23,10 +22,6 @@ const raycaster = new THREE.Raycaster(
   0,
   10
 )
-
-Globals.assign({
-  frameLoop: `always`,
-})
 
 export const usePlayerSpeedStore = create<{
   playerSpeed: THREE.Vector3

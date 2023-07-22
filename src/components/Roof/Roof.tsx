@@ -10,30 +10,32 @@ import { GLTF } from 'three-stdlib'
 
 type GLTFResult = GLTF & {
   nodes: {
-    Cube_roof_ground_material_0: THREE.Mesh
-    Cube007_guards_material_0: THREE.Mesh
+    Cube_roof_ground_material_0002: THREE.Mesh
     Cube007_guards_material_0002: THREE.Mesh
-    Cube015_guards_material_0: THREE.Mesh
-    Cube016_guards_material_0: THREE.Mesh
+    Cube015_guards_material_0001: THREE.Mesh
+    Cube016_guards_material_0001: THREE.Mesh
+    Cube_roof_ground_material_0001: THREE.Mesh
+    Cube007_guards_material_0001: THREE.Mesh
   }
   materials: {
-    roof_ground_material: THREE.MeshStandardMaterial
-    guards_material: THREE.MeshStandardMaterial
+    ['roof_ground_material.002']: THREE.MeshStandardMaterial
+    ['guards_material.002']: THREE.MeshStandardMaterial
+    ['roof_ground_material.004']: THREE.MeshStandardMaterial
+    ['guards_material.004']: THREE.MeshStandardMaterial
   }
 }
 
 const Mat = () => (
   <meshStandardMaterial
     attach="material"
-    color="#757575"
-    roughness={0.5}
+    color="#4d4d4d"
+    roughness={0}
     metalness={0}
   />
 )
 
 export function Roof(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('/roof/roof.glb') as GLTFResult
-
   return (
     <group
       {...props}
@@ -44,29 +46,9 @@ export function Roof(props: JSX.IntrinsicElements['group']) {
     >
       <group rotation={[-Math.PI / 2, 0, 0]} scale={0.01}>
         <group rotation={[Math.PI / 2, 0, 0]}>
-          <group
-            position={[579.56, 91, -858.16]}
-            rotation={[-Math.PI / 2, 0, -Math.PI]}
-            scale={[115.67, 84.27, 115.67]}
-          >
-            <mesh
-              geometry={nodes.Cube007_guards_material_0.geometry}
-              receiveShadow
-              castShadow
-            >
-              <Mat />
-            </mesh>
-            <mesh
-              geometry={nodes.Cube007_guards_material_0002.geometry}
-              position={[9.97, 0, 0]}
-              receiveShadow
-              castShadow
-            >
-              <Mat />
-            </mesh>
-          </group>
           <mesh
-            geometry={nodes.Cube_roof_ground_material_0.geometry}
+            geometry={nodes.Cube_roof_ground_material_0002.geometry}
+            material={materials['roof_ground_material.002']}
             position={[0, 0, 40.86]}
             rotation={[-Math.PI / 2, 0, 0]}
             scale={100}
@@ -76,7 +58,17 @@ export function Roof(props: JSX.IntrinsicElements['group']) {
             <Mat />
           </mesh>
           <mesh
-            geometry={nodes.Cube015_guards_material_0.geometry}
+            geometry={nodes.Cube007_guards_material_0002.geometry}
+            position={[579.56, 91, -858.16]}
+            rotation={[-Math.PI / 2, 0, -Math.PI]}
+            scale={[115.67, 84.27, 115.67]}
+            receiveShadow
+            castShadow
+          >
+            <Mat />
+          </mesh>
+          <mesh
+            geometry={nodes.Cube015_guards_material_0001.geometry}
             position={[444.9, 91, -1033.93]}
             rotation={[Math.PI / 2, 0, -Math.PI / 2]}
             scale={[-115.67, -84.27, -115.67]}
@@ -86,9 +78,37 @@ export function Roof(props: JSX.IntrinsicElements['group']) {
             <Mat />
           </mesh>
           <mesh
-            geometry={nodes.Cube016_guards_material_0.geometry}
+            geometry={nodes.Cube016_guards_material_0001.geometry}
             position={[444.9, 91, 1120.48]}
             rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+            scale={[115.67, 84.27, 115.67]}
+            receiveShadow
+            castShadow
+          >
+            <Mat />
+          </mesh>
+        </group>
+      </group>
+      <group rotation={[Math.PI / 2, 0, 0]} scale={-0.01}>
+        <group rotation={[Math.PI / 2, 0, 0]}>
+          <mesh
+            geometry={nodes.Cube_roof_ground_material_0001.geometry}
+            position={[0, 0, 40.86]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            scale={100}
+            receiveShadow
+            castShadow
+          >
+            <Mat />
+          </mesh>
+        </group>
+      </group>
+      <group rotation={[Math.PI / 2, 0, 0]} scale={-0.01}>
+        <group rotation={[Math.PI / 2, 0, 0]}>
+          <mesh
+            geometry={nodes.Cube007_guards_material_0001.geometry}
+            position={[579.56, 91, -858.16]}
+            rotation={[-Math.PI / 2, 0, -Math.PI]}
             scale={[115.67, 84.27, 115.67]}
             receiveShadow
             castShadow
