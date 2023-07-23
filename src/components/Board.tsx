@@ -31,7 +31,7 @@ const raycaster = new THREE.Raycaster(
   new THREE.Vector3(),
   new THREE.Vector3(0, 0, 1),
   0,
-  100
+  MAX_DISTANCE_FROM_BOARD
 )
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
