@@ -10,10 +10,12 @@ const ControlsContainer = styled(motion.div)`
   justify-content: center;
   gap: 5px;
   flex-direction: column;
-  width: fit-content;
+  width: 230px;
   background-color: rgba(255, 255, 255, 1);
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 50px;
+  height: 230px;
+  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
   > div {
     display: flex;
     align-items: center;
@@ -33,8 +35,8 @@ const Key = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
     border-radius: 2px;
     border: 1px solid black;
     position: relative;

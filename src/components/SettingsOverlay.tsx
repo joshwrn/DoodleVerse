@@ -24,11 +24,14 @@ const Container = styled(motion.div)`
   min-width: 500px;
   max-width: 700px;
   background-color: rgba(255, 255, 255, 1);
-  height: fit-content;
+  height: 230px;
   border-radius: 50px;
   padding: 50px;
   color: black;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `
 const Row = styled.div`
   display: flex;
@@ -98,7 +101,6 @@ const Wrapper = styled(motion.div)`
   align-items: center;
   justify-content: center;
   z-index: 100;
-  flex-direction: column;
   gap: 20px;
 `
 

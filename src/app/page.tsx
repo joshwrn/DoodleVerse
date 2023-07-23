@@ -62,7 +62,6 @@ export default function Home() {
         <Environment
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
           path="skybox/"
-          blur={100}
         />
         <PointerLockControls ref={lockRef} />
         <Physics gravity={[0, -50, 0]}>
