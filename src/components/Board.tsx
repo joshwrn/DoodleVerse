@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { ThreeEvent, useFrame } from '@react-three/fiber'
+import React from 'react'
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { Mesh, Vector3 } from 'three'
 import { useDrawStore } from '@/state/settings/draw'
 import {
@@ -13,6 +13,9 @@ import { useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 import { useImageLoadedStore } from '@/server/events/client/loadCanvas'
 import { useSettingsStore } from '@/state/settings/settings'
+import { Point2d } from '@/server/events/server/makeBrushStroke'
+import * as THREE from 'three'
+import { usePhysicsFrame } from '@/hooks/usePhysicsFrame'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -23,6 +26,13 @@ const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   }
   return currentPosition
 }
+
+const raycaster = new THREE.Raycaster(
+  new THREE.Vector3(),
+  new THREE.Vector3(0, 0, 1),
+  0,
+  100
+)
 
 export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const [ref] = useBox<Mesh>(() => ({
@@ -50,13 +60,14 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
 
   const socket = useSocketState((state) => state.socket)
 
-  useFrame(() => {
-    if (textureRef.current) {
-      textureRef.current.needsUpdate = true
-    }
-  })
-
   const lastPosition = React.useRef<{ x: number | null; y: number | null }>({
+    x: null,
+    y: null,
+  })
+  const currentPositionRef = React.useRef<{
+    x: number | null
+    y: number | null
+  }>({
     x: null,
     y: null,
   })
@@ -73,6 +84,22 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     setDistance(null)
   }
 
+  const { camera, mouse } = useThree()
+
+  usePhysicsFrame(({ shouldUpdate }) => {
+    if (textureRef.current) {
+      textureRef.current.needsUpdate = true
+    }
+    if (ref) {
+      raycaster.setFromCamera(mouse, camera)
+      const ray = raycaster.intersectObject(ref.current!)[0]
+      if (!ray) return
+      const { distance, point } = ray
+      setDistance(distance)
+      currentPositionRef.current = convertVector3ToCanvasCoords({ point })
+    }
+  })
+
   const checksBeforeDrawing = (e: ThreeEvent<PointerEvent>, stroke: string) => {
     if (settingsOpen) return null
     const ctx = domNode?.getContext(`2d`)
@@ -81,20 +108,17 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
       onLeave()
       return null
     }
-    setDistance(e.distance)
     if (!mouseDown && stroke === 'line') {
       resetLastPosition()
       return null
     }
-    const currentPosition = convertVector3ToCanvasCoords({
-      point: e.point,
-    })
-    return { ctx, currentPosition }
+    return { ctx }
   }
 
   const drawLine = (e: ThreeEvent<PointerEvent>, stroke: string) => {
-    const { ctx, currentPosition } = checksBeforeDrawing(e, stroke) ?? {}
-    if (!ctx || !currentPosition || !socket) return
+    const { ctx } = checksBeforeDrawing(e, stroke) ?? {}
+    const currentPosition = currentPositionRef.current
+    if (!ctx || !currentPosition.x || !currentPosition.y || !socket) return
     const from =
       stroke === 'line'
         ? {
@@ -102,6 +126,8 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
             y: lastPosition.current.y ?? currentPosition.y,
           }
         : currentPosition
+
+    if (!from.x || !from.y) return
     ctx.beginPath()
     ctx.lineWidth = brushSize
     ctx.lineCap = `round`
@@ -117,8 +143,8 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     socket.emit(`makeBrushStroke`, {
       userId,
       brushStroke: {
-        to: currentPosition,
-        from: from,
+        to: currentPosition as Point2d,
+        from: from as Point2d,
         color: color,
         brushSize: brushSize,
       },

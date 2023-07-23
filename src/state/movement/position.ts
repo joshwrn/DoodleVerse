@@ -23,7 +23,7 @@ const raycaster = new THREE.Raycaster(
   10
 )
 
-export const usePlayerSpeedStore = create<{
+export const usePlayerPositionStore = create<{
   playerSpeed: THREE.Vector3
   setPlayerSpeed: (playerSpeed: THREE.Vector3) => void
   isJumping: boolean
@@ -49,7 +49,7 @@ export const useUpdatePlayerPosition = ({
   const { objects } = useObjectStore((s) => ({
     objects: s.objects,
   }))
-  const { setPlayerSpeed } = usePlayerSpeedStore((s) => ({
+  const { setPlayerSpeed } = usePlayerPositionStore((s) => ({
     setPlayerSpeed: s.setPlayerSpeed,
   }))
   const velocity = useRef([0, 0, 0])
