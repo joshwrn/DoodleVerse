@@ -93,7 +93,10 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
     if (ref) {
       raycaster.setFromCamera(mouse, camera)
       const ray = raycaster.intersectObject(ref.current!)[0]
-      if (!ray) return
+      if (!ray) {
+        onLeave()
+        return
+      }
       const { distance, point } = ray
       setDistance(distance)
       currentPositionRef.current = convertVector3ToCanvasCoords({ point })

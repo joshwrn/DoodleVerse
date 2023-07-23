@@ -29,7 +29,7 @@ export const useDrawStore = create<{
   colorHistory: [`#651e3e`, `#6C5B7B`, `#A8E6CE`, `#355C7D`, `#F8B195`],
   setColorHistory: (colorHistory) => set({ colorHistory }),
 
-  brushSize: 15,
+  brushSize: 30,
   setBrushSize: (brushSize) => set({ brushSize }),
 }))
 

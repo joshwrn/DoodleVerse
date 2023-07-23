@@ -3,6 +3,8 @@ import React from 'react'
 
 import styled from 'styled-components'
 import { PiPaintBrushDuotone } from 'react-icons/pi'
+import { AiOutlineUser } from 'react-icons/ai'
+import { useSocketState } from '@/server/clientSocket'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -14,7 +16,7 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
 `
-const SettingsContainer = styled.div`
+const Container = styled.div`
   position: absolute;
   top: 20px;
   right: 20px;
@@ -22,6 +24,12 @@ const SettingsContainer = styled.div`
   align-items: center;
   justify-content: center;
   gap: 10px;
+`
+const SettingsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 10px;
   backdrop-filter: blur(10px);
@@ -30,12 +38,21 @@ const SettingsContainer = styled.div`
 `
 
 export const Hud: FC = () => {
+  const { totalUsers } = useSocketState((s) => ({
+    totalUsers: s.totalUsers,
+  }))
   return (
     <Wrapper>
-      <SettingsContainer>
-        <PiPaintBrushDuotone />
-        <p>TAB</p>
-      </SettingsContainer>
+      <Container>
+        <SettingsContainer>
+          <AiOutlineUser />
+          <p>{totalUsers}</p>
+        </SettingsContainer>
+        <SettingsContainer>
+          <PiPaintBrushDuotone />
+          <p>TAB</p>
+        </SettingsContainer>
+      </Container>
     </Wrapper>
   )
 }

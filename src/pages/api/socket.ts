@@ -5,7 +5,7 @@ import {
 import type { NextApiRequest, NextApiResponse } from 'next'
 import type { Socket, ServerOptions } from 'socket.io'
 import { Server } from 'socket.io'
-import { createCanvas, loadImage } from 'canvas'
+import { createCanvas } from 'canvas'
 import { CANVAS_RESOLUTION } from '@/state/constants'
 
 import { MongoClient } from 'mongodb'
@@ -50,6 +50,7 @@ export type SocketClientToServer = {
 export type SocketServerToClient = {
   loadCanvas: (data: string) => void
   makeBrushStroke: (data: MakeBrushStroke) => void
+  totalUsers: (data: number) => void
 }
 
 export type MySocket = Socket<SocketClientToServer, SocketServerToClient>
@@ -84,13 +85,12 @@ export default async function handler(
   const db = client.db('mural-db')
 
   const onConnection = async (socket: MySocket) => {
-    console.log(`Connected`)
-    const totalUsers = io.engine.clientsCount
-    console.log(`Total users: ${totalUsers}`)
+    console.log(`Total users: ${io.engine.clientsCount}`)
 
     makeBrushStroke(socket, io, ctx)
     LoadCanvas(socket, io, canvas, db)
     disconnect(socket, io, canvas, db)
+    io.sockets.emit(`totalUsers`, io.engine.clientsCount)
   }
 
   io.on(`connection`, onConnection)
