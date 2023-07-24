@@ -15,7 +15,7 @@ import { SkyBox } from '@/components/Skybox'
 import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Hud'
-import { Male } from '@/components/Male'
+import { Male2 } from '@/components/Male2'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -69,8 +69,8 @@ export default function Home() {
           <Board domNode={domNode} />
           <Ground />
           <Roof />
-          <Player />
-          <Male />
+          {/* <Player /> */}
+          <Male2 />
         </Physics>
         <ambientLight intensity={0.2} />
         <pointLight

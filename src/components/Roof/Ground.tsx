@@ -55,7 +55,12 @@ export const Ground = (): React.ReactElement => {
     <>
       <mesh ref={ref} scale={groundSize} castShadow receiveShadow>
         <boxGeometry />
-        <meshStandardMaterial attach="material" {...props} />
+        <meshBasicMaterial
+          attach="material"
+          // {...props}
+          transparent
+          opacity={0}
+        />
       </mesh>
       <mesh ref={boxRef1} scale={boxSize} />
       <mesh ref={boxRef2} scale={boxSize} />
