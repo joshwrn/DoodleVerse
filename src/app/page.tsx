@@ -71,7 +71,7 @@ export default function Home() {
           <Board domNode={domNode} />
           <Ground />
           <Roof />
-          <Player />
+          {/* <Player /> */}
           <Male2 />
         </Physics>
         <ambientLight intensity={0.2} />

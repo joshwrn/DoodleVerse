@@ -5,9 +5,9 @@ Command: npx gltfjsx@6.1.4 -t public/avatar/male2.glb
 
 import * as THREE from 'three'
 import { useEffect, useRef } from 'react'
-import { useGLTF, useAnimations } from '@react-three/drei'
+import { useGLTF, useAnimations, PointerLockControls } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import {
   useMovementControls,
   useMovementStore,
@@ -79,11 +79,13 @@ const directionOffset = ({
 export function Male2(props: JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>(null)
   const outer = useRef<THREE.Group>(null)
-  const { nodes, materials, animations, scene } = useGLTF(
-    '/avatar/male2.glb'
-  ) as GLTFResult
+  const model = useGLTF('/avatar/male2.glb') as GLTFResult
+  const { nodes, materials, animations, scene } = model
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
   const { forward, backward, left, right } = useMovementStore((s) => s)
+  useMovementControls()
+  const controlsRef = useRef<any>(null)
+  const cameraPosRef = useRef<THREE.Group>(null)
 
   useEffect(() => {
     actions['Armature.001|F_Standing_Idle_001|F_Standing_Idle_001:BaseAnimat']
@@ -91,13 +93,32 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
       .fadeIn(0.5)
       .play()
   }, [actions])
+  const { camera } = useThree()
+
+  const updateCameraTarget = (moveX: number, moveZ: number) => {
+    // move camera
+    cameraTarget.x += moveX
+    cameraTarget.z += moveZ
+
+    // update camera target
+    cameraTarget.x = scene.position.x
+    cameraTarget.y = scene.position.y
+    cameraTarget.z = scene.position.z
+    // if (controlsRef.current) {
+    //   controlsRef.current.target = cameraTarget
+    // }
+    cameraPosRef.current?.getWorldPosition(camera.position)
+  }
 
   useFrame((state, delta) => {
     if (forward || backward || left || right) {
+      // calculate towards camera direction
       let angleYCameraDirection = Math.atan2(
-        state.camera.position.x - outer.current!.position.x,
-        state.camera.position.z - outer.current!.position.z
+        camera.position.x - outer.current!.position.x,
+        camera.position.z - outer.current!.position.z
       )
+
+      // diagonal movement angle offset
       let newDirectionOffset = directionOffset({
         forward,
         backward,
@@ -105,39 +126,69 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
         right,
       })
 
+      // rotate model
       rotateQuaternion.setFromAxisAngle(
         rotateAngle,
         angleYCameraDirection + newDirectionOffset
       )
-      outer.current!.quaternion.rotateTowards(rotateQuaternion, 0.2)
+      outer.current!.quaternion.rotateTowards(rotateQuaternion, 0.05)
+
+      console.log(camera)
+      // calculate direction
+      camera.getWorldDirection(walkDirection)
+      walkDirection.y = 0
+      walkDirection.normalize()
+      walkDirection.applyAxisAngle(rotateAngle, newDirectionOffset)
+
+      // run / walk velocity
+      const velocity = 50
+
+      // move model & camera
+      const moveX = walkDirection.x * velocity * delta
+      const moveZ = walkDirection.z * velocity * delta
+      outer.current!.position.x += moveX
+      outer.current!.position.z += moveZ
+      updateCameraTarget(moveX, moveZ)
     }
   })
 
   return (
-    <group ref={outer}>
-      <group
-        ref={group}
-        {...props}
-        dispose={null}
-        position={[0, -13, 5]}
-        rotation={[0, 0, 0]}
-        scale={13}
-      >
-        <group name="Scene">
-          <group name="Armature001" rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
-            <primitive object={nodes.Hips} />
-            <skinnedMesh
-              name="Wolf3D_Avatar"
-              geometry={nodes.Wolf3D_Avatar.geometry}
-              material={materials.Wolf3D_Avatar}
-              skeleton={nodes.Wolf3D_Avatar.skeleton}
-              morphTargetDictionary={nodes.Wolf3D_Avatar.morphTargetDictionary}
-              morphTargetInfluences={nodes.Wolf3D_Avatar.morphTargetInfluences}
-            />
+    <>
+      <group ref={outer}>
+        <group ref={cameraPosRef} position={[0, 13, 0]} />
+        <group
+          ref={group}
+          {...props}
+          dispose={null}
+          position={[0, -13, 5]}
+          rotation={[0, 0, 0]}
+          scale={13}
+        >
+          <group name="Scene">
+            <group
+              name="Armature001"
+              rotation={[Math.PI / 2, 0, 0]}
+              scale={0.01}
+            >
+              <primitive object={nodes.Hips} />
+              <skinnedMesh
+                name="Wolf3D_Avatar"
+                geometry={nodes.Wolf3D_Avatar.geometry}
+                material={materials.Wolf3D_Avatar}
+                skeleton={nodes.Wolf3D_Avatar.skeleton}
+                morphTargetDictionary={
+                  nodes.Wolf3D_Avatar.morphTargetDictionary
+                }
+                morphTargetInfluences={
+                  nodes.Wolf3D_Avatar.morphTargetInfluences
+                }
+              />
+            </group>
           </group>
+          g
         </group>
       </group>
-    </group>
+    </>
   )
 }
 
