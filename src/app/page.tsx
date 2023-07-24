@@ -16,6 +16,8 @@ import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Hud'
 import { Male } from '@/components/Male'
+import { Male2 } from '@/components/Male2'
+import { useMovementControls } from '@/state/movement/controls'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -70,7 +72,7 @@ export default function Home() {
           <Ground />
           <Roof />
           <Player />
-          <Male />
+          <Male2 />
         </Physics>
         <ambientLight intensity={0.2} />
         <pointLight
