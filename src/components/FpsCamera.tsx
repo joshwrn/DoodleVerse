@@ -34,15 +34,17 @@ export const FpsCamera = () => {
   const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
   }))
-  const lockRef = useRef<any>(null)
+  const isLockedRef = useRef<boolean>(false)
 
   useEffect(() => {
-    if (!lockRef.current) return
+    if (!isLockedRef.current) return
     if (settingsOpen) {
-      lockRef.current.unlock()
+      isLockedRef.current = false
+      document.exitPointerLock()
     }
     if (!settingsOpen) {
-      lockRef.current.lock()
+      isLockedRef.current = true
+      document.body.requestPointerLock()
     }
   }, [settingsOpen])
 
@@ -54,6 +56,7 @@ export const FpsCamera = () => {
 
   useEffect(() => {
     let onMouseMove = (event: any) => {
+      if (!isLockedRef.current) return
       movement.current.x = event.movementX
       movement.current.y = event.movementY
     }
@@ -62,6 +65,7 @@ export const FpsCamera = () => {
       'click',
       () => {
         document.body.requestPointerLock()
+        isLockedRef.current = true
       },
       false
     )
