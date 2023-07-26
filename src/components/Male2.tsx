@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.1.4 -t public/avatar/male2.glb
 */
 
 import * as THREE from 'three'
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useGLTF, useAnimations, PointerLockControls } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { useFrame, useThree } from '@react-three/fiber'
@@ -12,6 +12,7 @@ import {
   useMovementControls,
   useMovementStore,
 } from '@/state/movement/controls'
+import { useCameraStore } from './FpsCamera'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -54,23 +55,23 @@ const directionOffset = ({
   right: boolean
 }) => {
   let directionOffset = 0 // w
-  if (forward) {
-    if (left) {
+  if (backward) {
+    if (right) {
       directionOffset = Math.PI / 4 // w + a
-    } else if (right) {
+    } else if (left) {
       directionOffset = -Math.PI / 4 // w + d
     }
-  } else if (backward) {
-    if (left) {
+  } else if (forward) {
+    if (right) {
       directionOffset = Math.PI / 4 + Math.PI / 2 // s + a
-    } else if (right) {
+    } else if (left) {
       directionOffset = -Math.PI / 4 - Math.PI / 2 // s + d
     } else {
       directionOffset = Math.PI // s
     }
-  } else if (left) {
-    directionOffset = Math.PI / 2 // a
   } else if (right) {
+    directionOffset = Math.PI / 2 // a
+  } else if (left) {
     directionOffset = -Math.PI / 2 // d
   }
   return directionOffset
@@ -85,6 +86,7 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
   const { forward, backward, left, right } = useMovementStore((s) => s)
   useMovementControls()
   const controlsRef = useRef<any>(null)
+  const camObj = useCameraStore((s) => s.camObj)
   const cameraPosRef = useRef<THREE.Group>(null)
 
   useEffect(() => {
@@ -96,6 +98,7 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
   const { camera } = useThree()
 
   const updateCameraTarget = (moveX: number, moveZ: number) => {
+    if (!camObj) return
     // move camera
     cameraTarget.x += moveX
     cameraTarget.z += moveZ
@@ -107,16 +110,20 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
     // if (controlsRef.current) {
     //   controlsRef.current.target = cameraTarget
     // }
-    cameraPosRef.current?.getWorldPosition(camera.position)
+    cameraPosRef.current?.getWorldPosition(camObj.position)
   }
 
   useFrame((state, delta) => {
+    if (!outer.current || !group.current || !camObj) return
+
+    // copy camera position to group
+    outer.current.rotation.y = THREE.MathUtils.lerp(
+      outer.current.rotation.y,
+      camObj.rotation.y,
+      0.1
+    )
     if (forward || backward || left || right) {
       // calculate towards camera direction
-      let angleYCameraDirection = Math.atan2(
-        camera.position.x - outer.current!.position.x,
-        camera.position.z - outer.current!.position.z
-      )
 
       // diagonal movement angle offset
       let newDirectionOffset = directionOffset({
@@ -126,16 +133,8 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
         right,
       })
 
-      // rotate model
-      rotateQuaternion.setFromAxisAngle(
-        rotateAngle,
-        angleYCameraDirection + newDirectionOffset
-      )
-      outer.current!.quaternion.rotateTowards(rotateQuaternion, 0.05)
-
-      console.log(camera)
       // calculate direction
-      camera.getWorldDirection(walkDirection)
+      camObj.getWorldDirection(walkDirection)
       walkDirection.y = 0
       walkDirection.normalize()
       walkDirection.applyAxisAngle(rotateAngle, newDirectionOffset)
@@ -160,8 +159,8 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
           ref={group}
           {...props}
           dispose={null}
-          position={[0, -13, 5]}
-          rotation={[0, 0, 0]}
+          position={[0, -7, 10]}
+          rotation={[0, Math.PI, 0]}
           scale={13}
         >
           <group name="Scene">
@@ -182,10 +181,10 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
                 morphTargetInfluences={
                   nodes.Wolf3D_Avatar.morphTargetInfluences
                 }
+                castShadow
               />
             </group>
           </group>
-          g
         </group>
       </group>
     </>

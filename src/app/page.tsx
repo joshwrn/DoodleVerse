@@ -1,23 +1,21 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
-import { PointerLockControls, Environment } from '@react-three/drei'
+import { useState } from 'react'
+import { Environment } from '@react-three/drei'
+
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
 import { Physics } from '@react-three/cannon'
-import Player from '@/components/Player'
 import { Ground } from '@/components/Roof/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Crosshair'
 import { useMouseDown } from '@/state/settings/draw'
 import { SettingsOverlay } from '@/components/SettingsOverlay'
-import { useSettingsStore } from '@/state/settings/settings'
 import { SkyBox } from '@/components/Skybox'
 import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Hud'
-import { Male } from '@/components/Male'
 import { Male2 } from '@/components/Male2'
-import { useMovementControls } from '@/state/movement/controls'
+import { FpsCamera } from '@/components/FpsCamera'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -33,19 +31,7 @@ export default function Home() {
   const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
   useSockets({ domNode })
-  const { settingsOpen } = useSettingsStore((s) => ({
-    settingsOpen: s.settingsOpen,
-  }))
-  const lockRef = useRef<any>(null)
-  useEffect(() => {
-    if (!lockRef.current) return
-    if (settingsOpen) {
-      lockRef.current.unlock()
-    }
-    if (!settingsOpen) {
-      lockRef.current.lock()
-    }
-  }, [settingsOpen])
+
   return (
     <CanvasContainer>
       <Canvas
@@ -57,16 +43,15 @@ export default function Home() {
         }}
         camera={{
           fov: 80,
-          position: [150, 15, 0],
-          rotation: [0, Math.PI, 0],
         }}
       >
+        <FpsCamera />
         <SkyBox />
         <Environment
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
           path="skybox/"
         />
-        <PointerLockControls ref={lockRef} />
+        {/* <PointerLockControls ref={lockRef} /> */}
         <Physics gravity={[0, -50, 0]}>
           <Board domNode={domNode} />
           <Ground />
