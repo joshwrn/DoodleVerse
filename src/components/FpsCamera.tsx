@@ -23,10 +23,12 @@ const setRotationX = (camObjX: THREE.Object3D<THREE.Event>, mouseY: number) => {
   )
 }
 
-export const FpsCamera = () => {
-  const { camera } = useThree((s) => ({
-    camera: s.camera,
-  }))
+export const FpsCamera = ({
+  canvasRef,
+}: {
+  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
+}) => {
+  const { camera, get, setEvents } = useThree((s) => s)
   const camObj = useMemo(() => new THREE.Object3D(), [])
   const { setCamObj } = useCameraStore()
   const movement = useRef({ x: 0, y: 0 })
@@ -37,22 +39,41 @@ export const FpsCamera = () => {
   const isLockedRef = useRef<boolean>(false)
 
   useEffect(() => {
-    if (!isLockedRef.current) return
     if (settingsOpen) {
       isLockedRef.current = false
       document.exitPointerLock()
     }
     if (!settingsOpen) {
       isLockedRef.current = true
-      document.body.requestPointerLock()
+      canvasRef.current?.requestPointerLock()
     }
-  }, [settingsOpen])
+  }, [settingsOpen, canvasRef])
 
   useEffect(() => {
     if (!camObj) return
     camObj.add(camera)
     setCamObj(camObj)
-  }, [camObj, , camera, setCamObj])
+  }, [camObj, camera, setCamObj])
+
+  useEffect(() => {
+    const oldComputeOffsets = get().events.compute
+    setEvents({
+      compute(event, state) {
+        const offsetX = state.size.width / 2
+        const offsetY = state.size.height / 2
+        state.pointer.set(
+          (offsetX / state.size.width) * 2 - 1,
+          -(offsetY / state.size.height) * 2 + 1
+        )
+        state.raycaster.setFromCamera(state.pointer, state.camera)
+      },
+    })
+    return () => {
+      setEvents({
+        compute: oldComputeOffsets,
+      })
+    }
+  }, [])
 
   useEffect(() => {
     let onMouseMove = (event: any) => {
@@ -62,9 +83,21 @@ export const FpsCamera = () => {
     }
     document.addEventListener('mousemove', onMouseMove, false)
     document.addEventListener(
+      'pointerlockchange',
+      (e) => {
+        console.log('pointerlockchange', e)
+        if (document.pointerLockElement === canvasRef.current) {
+          isLockedRef.current = true
+        } else {
+          isLockedRef.current = false
+        }
+      },
+      false
+    )
+    document.addEventListener(
       'click',
       () => {
-        document.body.requestPointerLock()
+        canvasRef.current?.requestPointerLock()
         isLockedRef.current = true
       },
       false

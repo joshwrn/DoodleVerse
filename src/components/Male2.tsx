@@ -83,7 +83,7 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
   const model = useGLTF('/avatar/male2.glb') as GLTFResult
   const { nodes, materials, animations, scene } = model
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
-  const { forward, backward, left, right } = useMovementStore((s) => s)
+  const { forward, backward, left, right, sprint } = useMovementStore((s) => s)
   useMovementControls()
   const controlsRef = useRef<any>(null)
   const camObj = useCameraStore((s) => s.camObj)
@@ -140,7 +140,7 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
       walkDirection.applyAxisAngle(rotateAngle, newDirectionOffset)
 
       // run / walk velocity
-      const velocity = 50
+      const velocity = sprint ? 70 : 50
 
       // move model & camera
       const moveX = walkDirection.x * velocity * delta

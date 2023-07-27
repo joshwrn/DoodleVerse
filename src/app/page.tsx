@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Environment } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
@@ -31,6 +31,7 @@ export default function Home() {
   const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
   useSockets({ domNode })
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   return (
     <CanvasContainer>
@@ -44,8 +45,10 @@ export default function Home() {
         camera={{
           fov: 80,
         }}
+        id="canvas"
+        ref={canvasRef}
       >
-        <FpsCamera />
+        <FpsCamera canvasRef={canvasRef} />
         <SkyBox />
         <Environment
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
