@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react'
 import {
   Environment,
+  Loader,
   MeshReflectorMaterial,
   PointerLockControls,
 } from '@react-three/drei'
@@ -52,6 +53,7 @@ export default function Home() {
   return (
     <CanvasContainer>
       <Gradients />
+
       <Canvas
         shadows
         gl={{
@@ -94,6 +96,14 @@ export default function Home() {
           <SettingsOverlay setDomNode={setDomNode} />
         </>
       )}
+      <Loader
+        containerStyles={{
+          background: 'transparent',
+        }}
+        dataStyles={{
+          opacity: 0,
+        }}
+      />
     </CanvasContainer>
   )
 }

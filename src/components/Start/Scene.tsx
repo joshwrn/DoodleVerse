@@ -4,6 +4,8 @@ import React, { useEffect } from 'react'
 import { Male } from '../Avatar/Male'
 import { Woman } from '../Avatar/Female'
 import { usePlayerStore } from '@/state/settings/player'
+import { motion } from 'framer-motion-3d'
+import { useSpring } from 'framer-motion'
 
 export const Scene: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
@@ -18,27 +20,77 @@ export const Scene: FC = () => {
       document.body.style.cursor = 'default'
     }
   }, [hoveredAvatar])
+
+  const shouldHighlight = (a: number) => {
+    if (a === hoveredAvatar) {
+      return true
+    }
+    if (a === avatar && !hoveredAvatar) {
+      return true
+    }
+    return false
+  }
+  const config = {
+    type: 'spring',
+    stiffness: 100,
+    damping: 20,
+  }
+  const brightness1 = useSpring(0, config)
+  const brightness2 = useSpring(0, config)
+  useEffect(() => {
+    brightness1.set(shouldHighlight(1) ? 10 : 0)
+    brightness2.set(shouldHighlight(2) ? 5 : 0)
+  }, [hoveredAvatar, avatar])
   return (
     <>
-      <Male
-        onClick={() => {
-          setAvatar(1)
+      <motion.group
+        animate={{
+          y: shouldHighlight(1) ? -16 : -17,
         }}
-        onPointerOver={() => setHoveredAvatar(1)}
-        onPointerOut={() => setHoveredAvatar(null)}
-        isSelection={true}
-        position={[-10, hoveredAvatar === 1 ? -16 : -17, -20]}
-        rotation={[0, 0.5, 0]}
-      />
-      <Woman
-        onClick={() => {
-          setAvatar(2)
+        transition={config}
+      >
+        <Male
+          onClick={() => {
+            setAvatar(1)
+          }}
+          onPointerOver={() => setHoveredAvatar(1)}
+          onPointerOut={() => setHoveredAvatar(null)}
+          isSelection={true}
+          position={[-8, 0, -20]}
+          rotation={[0, 0.5, 0]}
+        />
+
+        <motion.pointLight
+          position={[-10, 5, -20]}
+          distance={30}
+          // @ts-ignore
+          intensity={brightness1}
+          color="#d106ff"
+        />
+      </motion.group>
+      <motion.group
+        animate={{
+          y: shouldHighlight(2) ? -16 : -17,
         }}
-        onPointerOver={() => setHoveredAvatar(2)}
-        onPointerOut={() => setHoveredAvatar(null)}
-        position={[10, hoveredAvatar === 2 ? -16 : -17, -20]}
-        rotation={[0, -0.5, 0]}
-      />
+        transition={config}
+      >
+        <Woman
+          onClick={() => {
+            setAvatar(2)
+          }}
+          onPointerOver={() => setHoveredAvatar(2)}
+          onPointerOut={() => setHoveredAvatar(null)}
+          position={[8, 0, -20]}
+          rotation={[0, -0.5, 0]}
+        />
+        <motion.pointLight
+          position={[10, 15, -19]}
+          distance={30}
+          // @ts-ignore
+          intensity={brightness2}
+          color="#d106ff"
+        />
+      </motion.group>
     </>
   )
 }

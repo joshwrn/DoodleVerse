@@ -118,9 +118,9 @@ const Terms = () => {
       </p>
       <p>
         <span>Overwriting of Inappropriate Content:</span> If you encounter any
-        drawings that you find offensive, inappropriate, or harmful, you have
-        the ability to draw over them, effectively replacing the original
-        content with your own.
+        drawing that you find offensive, inappropriate, or harmful, you have the
+        ability to draw over them, effectively replacing the original content
+        with your own.
       </p>
     </StyledTerms>
   )
