@@ -45,7 +45,7 @@ export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
   const { setDistance, mouseDown, color, brushSize } = useDrawStore((s) => ({
     setDistance: s.setDistance,
     mouseDown: s.mouseDown,
-    color: s.color,
+    color: s.brushColor,
     brushSize: s.brushSize,
   }))
   const { userId } = usePlayerStore((s) => ({

@@ -11,7 +11,7 @@ import {
 export const Crosshair: FC = () => {
   const { distance, color, brushSize } = useDrawStore((s) => ({
     distance: s.distance,
-    color: s.color,
+    color: s.brushColor,
     brushSize: s.brushSize,
   }))
   const dis = distance ?? MAX_DISTANCE_FROM_BOARD

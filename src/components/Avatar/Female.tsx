@@ -51,7 +51,7 @@ export function Woman(props: JSX.IntrinsicElements['group']) {
     actions['idle_eyes']?.play()
   }, [actions])
   const { brushColor } = useDrawStore((s) => ({
-    brushColor: s.color,
+    brushColor: s.brushColor,
   }))
   return (
     <group

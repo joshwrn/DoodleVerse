@@ -12,7 +12,7 @@ import {
   useMovementControls,
   useMovementStore,
 } from '@/state/movement/controls'
-import { useCameraStore } from './FpsCamera'
+import { useCameraStore } from '../FpsCamera'
 
 type GLTFResult = GLTF & {
   nodes: {

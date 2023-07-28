@@ -120,8 +120,8 @@ export const SettingsOverlay: FC<{
     setColorHistory,
   } = useDrawStore((s) => {
     return {
-      color: s.color,
-      setColor: s.setColor,
+      color: s.brushColor,
+      setColor: s.setBrushColor,
       brushSize: s.brushSize,
       setBrushSize: s.setBrushSize,
       colorHistory: s.colorHistory,

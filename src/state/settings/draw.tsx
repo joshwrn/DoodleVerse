@@ -8,8 +8,8 @@ export const useDrawStore = create<{
   mouseDown: boolean
   setMouseDown: (mouseDown: boolean) => void
 
-  color: string
-  setColor: (color: string) => void
+  brushColor: string
+  setBrushColor: (color: string) => void
 
   colorHistory: string[]
   setColorHistory: (colorHistory: string[]) => void
@@ -23,8 +23,8 @@ export const useDrawStore = create<{
   mouseDown: false,
   setMouseDown: (mouseDown) => set({ mouseDown }),
 
-  color: `#651e3e`,
-  setColor: (color) => set({ color }),
+  brushColor: `#651e3e`,
+  setBrushColor: (brushColor) => set({ brushColor }),
 
   colorHistory: [`#651e3e`, `#6C5B7B`, `#A8E6CE`, `#355C7D`, `#F8B195`],
   setColorHistory: (colorHistory) => set({ colorHistory }),
