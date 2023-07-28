@@ -28,6 +28,15 @@ export const FpsCamera = ({
 }: {
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
 }) => {
+  const { camObj, isLocked } = useFpsCamera({ canvasRef })
+  return null
+}
+
+export const useFpsCamera = ({
+  canvasRef,
+}: {
+  canvasRef: React.MutableRefObject<HTMLCanvasElement | null>
+}) => {
   const { camera, get, setEvents } = useThree((s) => s)
   const camObj = useMemo(() => new THREE.Object3D(), [])
   const { setCamObj } = useCameraStore()
@@ -85,7 +94,6 @@ export const FpsCamera = ({
     document.addEventListener(
       'pointerlockchange',
       (e) => {
-        console.log('pointerlockchange', e)
         if (document.pointerLockElement === canvasRef.current) {
           isLockedRef.current = true
         } else {
@@ -94,14 +102,17 @@ export const FpsCamera = ({
       },
       false
     )
-    document.addEventListener(
+    canvasRef.current?.addEventListener(
       'click',
       () => {
+        console.log('click')
         canvasRef.current?.requestPointerLock()
-        isLockedRef.current = true
       },
       false
     )
+    return () => {
+      document.removeEventListener('mousemove', onMouseMove, false)
+    }
   }, [])
 
   useFrame((state, delta) => {
@@ -118,9 +129,8 @@ export const FpsCamera = ({
     }
   })
 
-  return (
-    <>
-      <primitive object={camObj} />
-    </>
-  )
+  return {
+    camObj,
+    isLocked: isLockedRef.current,
+  }
 }
