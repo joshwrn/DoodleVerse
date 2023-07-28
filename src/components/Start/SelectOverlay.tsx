@@ -40,11 +40,13 @@ const Wrapper = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-height: 80vh;
+  max-height: 90vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: 90vw;
+  max-width: 550px;
 `
 const StyledTerms = styled.div`
   position: relative;
