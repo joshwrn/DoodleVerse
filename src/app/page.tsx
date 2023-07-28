@@ -1,6 +1,10 @@
 'use client'
 import { useRef, useState } from 'react'
-import { Environment, MeshReflectorMaterial } from '@react-three/drei'
+import {
+  Environment,
+  MeshReflectorMaterial,
+  PointerLockControls,
+} from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
@@ -18,6 +22,10 @@ import { Male2 } from '@/components/Avatar/Male2'
 import { FpsCamera } from '@/components/FpsCamera'
 import { Woman } from '@/components/Avatar/Female'
 import { GradientLighting, Gradients } from '@/components/Background'
+import { Scene } from '@/components/Start/Scene'
+import { usePlayerStore } from '@/state/settings/player'
+import { SelectOverlay } from '@/components/Start/SelectOverlay'
+import { useSettingsStore } from '@/state/settings/settings'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -36,6 +44,10 @@ export default function Home() {
   useMouseDown()
   useSockets({ domNode })
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const { agreedToTerms, avatarSelected } = useSettingsStore((s) => ({
+    agreedToTerms: s.agreedToTerms,
+    avatarSelected: s.avatarSelected,
+  }))
 
   return (
     <CanvasContainer>
@@ -49,57 +61,39 @@ export default function Home() {
         }}
         camera={{
           fov: 80,
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
         }}
         id="canvas"
         ref={canvasRef}
       >
-        <FpsCamera canvasRef={canvasRef} />
-        {/* <SkyBox /> */}
         <Environment
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
           path="skybox/"
         />
-
-        <Physics gravity={[0, -50, 0]}>
-          <Board domNode={domNode} />
-          <Ground />
-          <Roof />
-          {/* <Player /> */}
-          <Male2 />
-          <Woman />
-        </Physics>
+        {!avatarSelected && <Scene />}
+        {agreedToTerms && (
+          <>
+            <FpsCamera canvasRef={canvasRef} />
+            <Physics gravity={[0, -50, 0]}>
+              <Board domNode={domNode} />
+              <Ground />
+              <Roof />
+              <Male2 />
+            </Physics>
+          </>
+        )}
         <ambientLight intensity={0.2} />
         <GradientLighting />
       </Canvas>
-      <Crosshair />
-      <Hud />
-      <SettingsOverlay setDomNode={setDomNode} />
+      {!agreedToTerms && <SelectOverlay />}
+      {agreedToTerms && (
+        <>
+          <Crosshair />
+          <Hud />
+          <SettingsOverlay setDomNode={setDomNode} />
+        </>
+      )}
     </CanvasContainer>
   )
 }
-
-const Floor = () => (
-  <>
-    <mesh
-      position={[75, -8, -20]}
-      receiveShadow
-      rotation={[-Math.PI / 2, 0, 0]}
-    >
-      <planeGeometry args={[180, 200]} />
-      <shadowMaterial transparent opacity={0.25} />
-      {/* <MeshReflectorMaterial
-        blur={[500, 40]}
-        resolution={1024}
-        mixBlur={1}
-        mixStrength={100}
-        roughness={1}
-        depthScale={1.2}
-        minDepthThreshold={0.4}
-        maxDepthThreshold={1.4}
-        color="#202020"
-        metalness={0.8}
-        mirror={0.5}
-      /> */}
-    </mesh>
-  </>
-)

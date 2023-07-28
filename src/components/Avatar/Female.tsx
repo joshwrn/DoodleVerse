@@ -56,11 +56,11 @@ export function Woman(props: JSX.IntrinsicElements['group']) {
   return (
     <group
       ref={group}
-      {...props}
       scale={30}
       position={[0, -7, 10]}
       rotation={[0, Math.PI, 0]}
       dispose={null}
+      {...props}
     >
       <pointLight
         intensity={5}
