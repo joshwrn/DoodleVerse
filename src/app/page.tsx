@@ -1,11 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import {
-  Environment,
-  Loader,
-  MeshReflectorMaterial,
-  PointerLockControls,
-} from '@react-three/drei'
+import { Environment, Loader } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
@@ -15,18 +10,16 @@ import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Overlay/Crosshair'
 import { useMouseDown } from '@/state/settings/draw'
 import { SettingsOverlay } from '@/components/Overlay/SettingsOverlay'
-import { SkyBox } from '@/components/Skybox'
 import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Overlay/Hud'
 import { Male2 } from '@/components/Avatar/Male2'
 import { FpsCamera } from '@/components/FpsCamera'
-import { Woman } from '@/components/Avatar/Female'
 import { GradientLighting, Gradients } from '@/components/Background'
 import { Scene } from '@/components/Start/Scene'
-import { usePlayerStore } from '@/state/settings/player'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
+import * as THREE from 'three'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -53,7 +46,6 @@ export default function Home() {
   return (
     <CanvasContainer>
       <Gradients />
-
       <Canvas
         shadows
         gl={{
@@ -63,7 +55,7 @@ export default function Home() {
         }}
         camera={{
           fov: 80,
-          position: [0, 0, 0],
+          position: [0, 13, 0],
           rotation: [0, 0, 0],
         }}
         id="canvas"

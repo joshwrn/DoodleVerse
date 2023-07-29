@@ -60,6 +60,8 @@ export const useFpsCamera = ({
 
   useEffect(() => {
     if (!camObj) return
+    camObj.position.set(100, 0, -10)
+    camObj.rotation.set(0, Math.PI, 0)
     camObj.add(camera)
     setCamObj(camObj)
   }, [camObj, camera, setCamObj])

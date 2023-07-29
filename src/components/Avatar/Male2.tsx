@@ -85,7 +85,6 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
   const { forward, backward, left, right, sprint } = useMovementStore((s) => s)
   useMovementControls()
-  const controlsRef = useRef<any>(null)
   const camObj = useCameraStore((s) => s.camObj)
   const cameraPosRef = useRef<THREE.Group>(null)
 
@@ -95,7 +94,6 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
       .fadeIn(0.5)
       .play()
   }, [actions])
-  const { camera } = useThree()
 
   const updateCameraTarget = (moveX: number, moveZ: number) => {
     if (!camObj) return
@@ -123,8 +121,6 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
       0.1
     )
     if (forward || backward || left || right) {
-      // calculate towards camera direction
-
       // diagonal movement angle offset
       let newDirectionOffset = directionOffset({
         forward,
@@ -153,8 +149,8 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
 
   return (
     <>
-      <group ref={outer}>
-        <group ref={cameraPosRef} position={[0, 13, 0]} />
+      <group ref={outer} position={[100, 0, -10]}>
+        <group ref={cameraPosRef} position={[0, 0, 0]} />
         <group
           ref={group}
           {...props}

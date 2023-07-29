@@ -8,11 +8,14 @@ import React, { useEffect, useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { useDrawStore } from '@/state/settings/draw'
+import { useEyesFollowMouse } from './eyeMovement'
 
 type GLTFResult = GLTF & {
   nodes: {
     Wolf3D_Avatar: THREE.SkinnedMesh
     Hips: THREE.Bone
+    LeftEye: THREE.Bone
+    RightEye: THREE.Bone
   }
   materials: {
     Wolf3D_Avatar: THREE.MeshStandardMaterial
@@ -40,16 +43,18 @@ type ActionName =
   | 'thumbsUp_R'
 type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
-export function Woman(props: JSX.IntrinsicElements['group']) {
+export function Woman({
+  isSelection,
+  ...props
+}: {
+  isSelection: boolean
+} & JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>(null)
   const { nodes, materials, animations } = useGLTF(
     '/avatar/female.glb'
   ) as GLTFResult
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
-  useEffect(() => {
-    if (!actions) return
-    actions['idle_eyes']?.play()
-  }, [actions])
+  useEyesFollowMouse(nodes, actions, isSelection)
   const { brushColor } = useDrawStore((s) => ({
     brushColor: s.brushColor,
   }))
@@ -78,6 +83,7 @@ export function Woman(props: JSX.IntrinsicElements['group']) {
             skeleton={nodes.Wolf3D_Avatar.skeleton}
             morphTargetDictionary={nodes.Wolf3D_Avatar.morphTargetDictionary}
             morphTargetInfluences={nodes.Wolf3D_Avatar.morphTargetInfluences}
+            castShadow
           />
         </group>
         p

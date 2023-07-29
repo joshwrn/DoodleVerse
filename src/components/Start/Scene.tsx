@@ -6,6 +6,7 @@ import { Woman } from '../Avatar/Female'
 import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
+import { PointerLockControls } from '@react-three/drei'
 
 export const Scene: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
@@ -45,21 +46,20 @@ export const Scene: FC = () => {
     <>
       <motion.group
         animate={{
-          y: shouldHighlight(1) ? -16 : -17,
+          y: shouldHighlight(1) ? -4 : -5,
         }}
         transition={config}
       >
         <Male
+          isSelection={true}
           onClick={() => {
             setAvatar(1)
           }}
           onPointerOver={() => setHoveredAvatar(1)}
           onPointerOut={() => setHoveredAvatar(null)}
-          isSelection={true}
           position={[-8, 0, -20]}
           rotation={[0, 0.5, 0]}
         />
-
         <motion.pointLight
           position={[-10, 5, -20]}
           distance={30}
@@ -70,11 +70,12 @@ export const Scene: FC = () => {
       </motion.group>
       <motion.group
         animate={{
-          y: shouldHighlight(2) ? -16 : -17,
+          y: shouldHighlight(2) ? -4 : -5,
         }}
         transition={config}
       >
         <Woman
+          isSelection={true}
           onClick={() => {
             setAvatar(2)
           }}

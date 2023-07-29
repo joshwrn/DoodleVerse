@@ -4,18 +4,21 @@ Command: npx gltfjsx@6.1.4 -t public/avatar/male.glb
 */
 
 import * as THREE from 'three'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 import { useDrawStore } from '@/state/settings/draw'
+import { useEyesFollowMouse } from './eyeMovement'
 
 type GLTFResult = GLTF & {
   nodes: {
     Wolf3D_Avatar: THREE.SkinnedMesh
     Hips: THREE.Bone
+    LeftEye: THREE.Bone
+    RightEye: THREE.Bone
   }
   materials: {
-    Wolf3D_Avatar: THREE.MeshStandardMaterial
+    ['Wolf3D_Avatar.001']: THREE.MeshStandardMaterial
   }
 }
 
@@ -38,7 +41,6 @@ type ActionName =
   | 'thumbDown_R'
   | 'thumbsUp_L'
   | 'thumbsUp_R'
-type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
 export function Male({
   isSelection,
@@ -51,13 +53,13 @@ export function Male({
     '/avatar/male.glb'
   ) as GLTFResult
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
-  useEffect(() => {
-    if (!actions) return
-    actions['idle_eyes']?.play()
-  }, [actions])
+
+  useEyesFollowMouse(nodes, actions, isSelection)
+
   const { brushColor } = useDrawStore((s) => ({
     brushColor: s.brushColor,
   }))
+
   return (
     <group
       ref={group}
@@ -79,10 +81,11 @@ export function Male({
           <skinnedMesh
             name="Wolf3D_Avatar"
             geometry={nodes.Wolf3D_Avatar.geometry}
-            material={materials.Wolf3D_Avatar}
+            material={materials['Wolf3D_Avatar.001']}
             skeleton={nodes.Wolf3D_Avatar.skeleton}
             morphTargetDictionary={nodes.Wolf3D_Avatar.morphTargetDictionary}
             morphTargetInfluences={nodes.Wolf3D_Avatar.morphTargetInfluences}
+            castShadow
           />
         </group>
       </group>

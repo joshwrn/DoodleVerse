@@ -122,6 +122,11 @@ const Terms = () => {
         ability to draw over them, effectively replacing the original content
         with your own.
       </p>
+      <p>
+        <span>Drawings Are Not Permanent:</span> Any drawing you create will be
+        drawn over by someone else and will not be saved. Take a screenshot if
+        you want to keep your drawing.
+      </p>
     </StyledTerms>
   )
 }
