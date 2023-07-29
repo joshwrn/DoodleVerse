@@ -54,6 +54,7 @@ const StyledTerms = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  text-align: center;
   p {
     line-height: 1.5;
   }

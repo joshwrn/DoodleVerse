@@ -6,7 +6,6 @@ import { Woman } from '../Avatar/Female'
 import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
-import { PointerLockControls } from '@react-three/drei'
 
 export const Scene: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
