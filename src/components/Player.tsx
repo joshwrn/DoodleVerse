@@ -39,8 +39,8 @@ export function Player(props: JSX.IntrinsicElements['group']) {
 
     emitPlayerEvent(socket, {
       position: {
-        z: playerRef.current.position.z,
-        x: playerRef.current.position.x,
+        z: camObj.position.z,
+        x: camObj.position.x,
       },
     })
   }

@@ -55,7 +55,7 @@ export default function Home() {
         }}
         camera={{
           fov: 80,
-          position: [0, 13, 0],
+          position: [0, 12, 0],
           rotation: [0, 0, 0],
         }}
         id="canvas"
