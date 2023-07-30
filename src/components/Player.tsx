@@ -36,25 +36,25 @@ export function Player(props: JSX.IntrinsicElements['group']) {
     if (!camObj || !playerRef.current) return
     // move camera
     playerRef.current.getWorldPosition(camObj.position)
-
-    emitPlayerEvent(socket, {
-      position: {
-        z: camObj.position.z,
-        x: camObj.position.x,
-      },
-    })
   }
+
   const velocity = useRef([0, 0, 0])
   useEffect(() => {
     playerApi.velocity.subscribe((v) => (velocity.current = v))
   }, [])
+
   useFrame((state, delta) => {
     if (!camObj || !playerRef.current) return
 
     if (forward || backward || left || right) {
-      updateCameraPosition()
+      emitPlayerEvent(socket, {
+        position: {
+          z: camObj.position.z,
+          x: camObj.position.x,
+        },
+      })
     }
-
+    updateCameraPosition()
     frontVector.set(0, 0, Number(backward) - Number(forward))
     sideVector.set(Number(left) - Number(right), 0, 0)
     direction
