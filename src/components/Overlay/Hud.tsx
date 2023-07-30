@@ -1,10 +1,8 @@
 import type { FC } from 'react'
-import React from 'react'
 
 import styled from 'styled-components'
 import { PiPaintBrushDuotone } from 'react-icons/pi'
 import { AiOutlineUser } from 'react-icons/ai'
-import { useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 
 const Wrapper = styled.div`

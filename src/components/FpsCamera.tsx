@@ -1,6 +1,4 @@
-import { useSocketState } from '@/server/clientSocket'
 import { useEmitPlayerEvent } from '@/server/events/client/playerEvent'
-import { usePlayerStore } from '@/state/settings/player'
 import { useSettingsStore } from '@/state/settings/settings'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'

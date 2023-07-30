@@ -9,8 +9,6 @@ import {
 } from '@/state/settings/settings'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ControlsHud } from './ControlsHud'
-import { useSocketState } from '@/server/clientSocket'
-import { usePlayerStore } from '@/state/settings/player'
 import { useEmitPlayerEvent } from '@/server/events/client/playerEvent'
 
 const Backdrop = styled(motion.div)`
