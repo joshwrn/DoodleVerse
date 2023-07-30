@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { use, useCallback } from 'react'
+import React, { useCallback } from 'react'
 
 import styled from 'styled-components'
 import { useDrawStore } from '@/state/settings/draw'
@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ControlsHud } from './ControlsHud'
 import { emitPlayerEvent } from '@/server/events/client/playerEvent'
 import { useSocketState } from '@/server/clientSocket'
+import { usePlayerStore } from '@/state/settings/player'
 
 const Backdrop = styled(motion.div)`
   position: absolute;
@@ -134,6 +135,7 @@ export const SettingsOverlay: FC<{
     setSettingsOpen: s.setSettingsOpen,
     settingsOpen: s.settingsOpen,
   }))
+  const userId = usePlayerStore((s) => s.userId)
 
   const updateColorHistory = (color: string) => {
     if (colorHistory.includes(color)) return
@@ -146,6 +148,7 @@ export const SettingsOverlay: FC<{
   const pickFromHistory = (color: string) => {
     setColor(color)
     emitPlayerEvent(socket, {
+      userId,
       brushColor: color,
     })
     const newColorHistory = [...colorHistory]
@@ -159,6 +162,7 @@ export const SettingsOverlay: FC<{
   const handleColorBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     updateColorHistory(e.target.value)
     emitPlayerEvent(socket, {
+      userId,
       brushColor: e.target.value,
     })
   }

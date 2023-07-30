@@ -4,14 +4,10 @@ import { usePlayerStore } from '@/state/settings/player'
 
 export const emitPlayerEvent = (
   socket: ClientSocket | null,
-  data: Omit<PlayerEvent, 'userId'>
+  data: PlayerEvent
 ) => {
   if (!socket) return
-  const userId = usePlayerStore.getState().userId
-  socket.emit('playerEvent', {
-    ...data,
-    userId,
-  })
+  socket.emit('playerEvent', data)
 }
 
 export const playerEvent = (socket: ClientSocket) => {
