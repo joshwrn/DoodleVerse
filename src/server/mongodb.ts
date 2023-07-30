@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb'
 
-export const startMongo = async (): Promise<MongoClient> => {
+export const initMongo = async (): Promise<MongoClient> => {
   if (!process.env.MONGODB_URI) {
     throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
   }

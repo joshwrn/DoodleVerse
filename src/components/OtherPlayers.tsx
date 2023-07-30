@@ -1,16 +1,22 @@
 import { Player, usePlayerStore } from '@/state/settings/player'
 import type { FC } from 'react'
 import React from 'react'
+import { Male } from './Avatar/Male'
+import { Woman } from './Avatar/Female'
 
 const OtherPlayer = ({ player }: { player: Player }) => {
   return (
-    <mesh
+    <group
       rotation={[0, player.rotationY, 0]}
       position={[player.position.x, 0, player.position.z]}
     >
-      <boxGeometry args={[5, 5, 5]} />
-      <meshBasicMaterial color={player.brushColor} />
-    </mesh>
+      {player.avatar === 1 && (
+        <Male brushColor={player.brushColor} isSelection={false} />
+      )}
+      {player.avatar === 2 && (
+        <Woman brushColor={player.brushColor} isSelection={false} />
+      )}
+    </group>
   )
 }
 
@@ -43,7 +49,7 @@ export const OtherPlayers2 = () => {
       <p>this id: {id}</p>
       {otherPlayers.map((player) => (
         <div key={player.userId}>
-          {player.userId} - {player.rotationY}
+          {player.userId} - {player.position.x} - {player.position.z}
         </div>
       ))}
     </div>

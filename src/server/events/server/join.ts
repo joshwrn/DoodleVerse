@@ -2,7 +2,7 @@ import { MySocket, ServerPlayer } from '@/pages/api/socket'
 
 export const join = (socket: MySocket, users: Map<string, ServerPlayer>) => {
   socket.on('join', (data) => {
-    socket.emit('players', {
+    socket.emit('loadPlayers', {
       for: data.userId,
       players: Array.from(users.values()),
     })

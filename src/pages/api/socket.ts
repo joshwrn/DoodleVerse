@@ -14,9 +14,9 @@ import { Player } from '@/state/settings/player'
 import { join } from '@/server/events/server/join'
 import { playerEvent } from '@/server/events/server/playerEvent'
 
-import { startMongo } from '@/server/mongodb'
+import { initMongo } from '@/server/mongodb'
 
-const clientPromise = startMongo()
+const clientPromise = initMongo()
 
 // SOCKET.IO
 const canvas = createCanvas(CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
@@ -46,7 +46,7 @@ export type SocketServerToClient = {
   totalUsers: (data: number) => void
   playerJoined: (data: ServerPlayer) => void
   playerLeft: (data: string) => void
-  players: (data: { for: string; players: ServerPlayer[] }) => void
+  loadPlayers: (data: { for: string; players: ServerPlayer[] }) => void
 }
 
 export type MySocket = Socket<SocketClientToServer, SocketServerToClient>
@@ -85,8 +85,6 @@ export default async function handler(
   const db = client.db('mural-db')
 
   const onConnection = async (socket: MySocket) => {
-    console.log(`Total users: ${io.engine.clientsCount}`)
-
     makeBrushStroke(socket, io, ctx)
     LoadCanvas(socket, io, canvas, db)
     playerEvent(socket, users)
@@ -94,12 +92,9 @@ export default async function handler(
     join(socket, users)
 
     io.sockets.emit(`totalUsers`, io.engine.clientsCount)
-
-    console.log('players', Array.from(users.values()))
   }
 
   io.on(`connection`, onConnection)
 
-  console.log(`Set up`)
   res.end()
 }

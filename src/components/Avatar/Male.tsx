@@ -44,9 +44,11 @@ type ActionName =
 
 export function Male({
   isSelection,
+  brushColor,
   ...props
 }: {
   isSelection: boolean
+  brushColor?: string
 } & JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>(null)
   const { nodes, materials, animations } = useGLTF(
@@ -56,15 +58,11 @@ export function Male({
 
   useEyesFollowMouse(nodes, actions, isSelection)
 
-  const { brushColor } = useDrawStore((s) => ({
-    brushColor: s.brushColor,
-  }))
-
   return (
     <group
       ref={group}
       scale={30}
-      position={[0, -7, 10]}
+      position={[0, -7, 0]}
       rotation={[0, Math.PI, 0]}
       dispose={null}
       {...props}
@@ -73,7 +71,7 @@ export function Male({
         intensity={5}
         distance={30}
         position={[-0.25, 1, 0]}
-        color={brushColor}
+        color={brushColor ?? '#ffffff'}
       />
       <group name="Scene">
         <group name="AvatarRoot">

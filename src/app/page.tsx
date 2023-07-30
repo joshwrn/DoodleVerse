@@ -35,9 +35,9 @@ const CanvasContainer = styled.main`
 `
 
 export default function Home() {
-  const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
+  const [canvasNode, setCanvasNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
-  useSockets({ domNode })
+  useSockets({ canvasNode: canvasNode })
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { agreedToTerms, avatarSelected } = useSettingsStore((s) => ({
     agreedToTerms: s.agreedToTerms,
@@ -71,7 +71,7 @@ export default function Home() {
           <>
             <FpsCamera canvasRef={canvasRef} />
             <Physics gravity={[0, -50, 0]}>
-              <Board domNode={domNode} />
+              <Board domNode={canvasNode} />
               <Ground />
               <Roof />
               <Male2 />
@@ -89,7 +89,7 @@ export default function Home() {
           <Hud />
         </>
       )}
-      <SettingsOverlay setDomNode={setDomNode} />
+      <SettingsOverlay setDomNode={setCanvasNode} />
       <Loader
         containerStyles={{
           background: 'transparent',
