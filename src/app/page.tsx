@@ -5,21 +5,21 @@ import { Environment, Loader } from '@react-three/drei'
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
 import { Debug, Physics } from '@react-three/cannon'
-import { Ground } from '@/components/Roof/Ground'
+import { Ground } from '@/components/Platform/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Overlay/Crosshair'
 import { useMouseDown } from '@/state/settings/draw'
 import { SettingsOverlay } from '@/components/Overlay/SettingsOverlay'
 import { useSockets } from '@/server/clientSocket'
-import { Roof } from '@/components/Roof/Roof'
+import { Railing } from '@/components/Platform/Railing'
 import { Hud } from '@/components/Overlay/Hud'
 import { Player } from '@/components/Player'
 import { FpsCamera } from '@/components/FpsCamera'
 import { GradientLighting, Gradients } from '@/components/Background'
-import { Scene } from '@/components/Start/Scene'
+import { Scene } from '@/components/Start/AvatarSelection'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
-import { OtherPlayers, OtherPlayers2 } from '@/components/OtherPlayers'
+import { OtherPlayers } from '@/components/OtherPlayers'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -72,7 +72,7 @@ export default function Home() {
             <Physics gravity={[0, -50, 0]}>
               <Board canvasNode={canvasNode} />
               <Ground />
-              <Roof />
+              <Railing />
               <Player />
             </Physics>
           </>
@@ -97,7 +97,6 @@ export default function Home() {
           opacity: 0,
         }}
       />
-      {/* <OtherPlayers2 /> */}
     </CanvasContainer>
   )
 }

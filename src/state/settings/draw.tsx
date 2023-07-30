@@ -4,6 +4,10 @@ import { create } from 'zustand'
 const randomColor = () =>
   `#${Math.floor(Math.random() * 16777215).toString(16)}`
 
+const randomColors = (num: number) => {
+  return Array.from({ length: num }, () => randomColor())
+}
+
 export const useDrawStore = create<{
   distance: number | null
   setDistance: (distance: number | null) => void
@@ -29,13 +33,7 @@ export const useDrawStore = create<{
   brushColor: randomColor(),
   setBrushColor: (brushColor) => set({ brushColor }),
 
-  colorHistory: [
-    randomColor(),
-    randomColor(),
-    randomColor(),
-    randomColor(),
-    randomColor(),
-  ],
+  colorHistory: randomColors(5),
   setColorHistory: (colorHistory) => set({ colorHistory }),
 
   brushSize: 30,

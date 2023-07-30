@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.1.4 -t public/roof/roof.glb
 */
 
 import * as THREE from 'three'
-import React, { useRef } from 'react'
+import React from 'react'
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 
@@ -34,7 +34,7 @@ const Mat = () => (
   />
 )
 
-export function Roof(props: JSX.IntrinsicElements['group']) {
+export function Railing(props: JSX.IntrinsicElements['group']) {
   const { nodes, materials } = useGLTF('/roof/roof.glb') as GLTFResult
   return (
     <group

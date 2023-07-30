@@ -67,7 +67,7 @@ export function Woman({
       {...props}
     >
       <pointLight
-        intensity={10}
+        intensity={isSelection ? 3 : 10}
         distance={30}
         position={[-0.25, 1, 0]}
         color={brushColor ?? '#ffffff'}

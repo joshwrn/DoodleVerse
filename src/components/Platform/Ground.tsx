@@ -1,6 +1,5 @@
 import { useBox } from '@react-three/cannon'
 import { Mesh } from 'three'
-import { useAddPhysicsObject } from '@/hooks/useAddPhysicsObject'
 import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 
@@ -50,7 +49,6 @@ export const Ground = (): React.ReactElement => {
     position: [-10, 5, -25],
     rotation: [0, Math.PI / 2, 0],
   }))
-  useAddPhysicsObject({ ref })
   return (
     <>
       <mesh ref={ref} scale={groundSize} castShadow receiveShadow>

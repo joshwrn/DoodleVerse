@@ -31,7 +31,7 @@ export const OtherPlayers: FC = () => {
   )
 }
 
-export const OtherPlayers2 = () => {
+export const DebugPlayers = () => {
   const { otherPlayers, id } = usePlayerStore((s) => ({
     otherPlayers: s.otherPlayers,
     id: s.userId,

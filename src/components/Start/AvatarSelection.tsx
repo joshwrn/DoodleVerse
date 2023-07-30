@@ -19,6 +19,9 @@ export const Scene: FC = () => {
     } else {
       document.body.style.cursor = 'default'
     }
+    return () => {
+      document.body.style.cursor = 'default'
+    }
   }, [hoveredAvatar])
 
   const shouldHighlight = (a: number) => {

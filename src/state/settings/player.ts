@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { nanoid } from 'nanoid'
-import Player from '@/components/Player'
 import { ServerPlayer } from '@/pages/api/socket'
 
 export type Player = {
