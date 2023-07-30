@@ -35,6 +35,7 @@ export const usePlayerPositionStore = create<{
   setIsJumping: (isJumping: boolean) => set({ isJumping }),
 }))
 
+// unused
 export const useUpdatePlayerPosition = ({
   playerRef,
   playerApi,

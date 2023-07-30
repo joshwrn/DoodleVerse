@@ -107,11 +107,11 @@ const Wrapper = styled(motion.div)`
 `
 
 export const SettingsOverlay: FC<{
-  setDomNode: (node: HTMLCanvasElement) => void
-}> = ({ setDomNode }) => {
+  setCanvasNode: (node: HTMLCanvasElement) => void
+}> = ({ setCanvasNode }) => {
   useSettingsControls()
   const onRefChange = useCallback((node: HTMLCanvasElement) => {
-    setDomNode(node)
+    setCanvasNode(node)
   }, [])
   const {
     color,

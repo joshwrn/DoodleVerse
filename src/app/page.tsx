@@ -4,7 +4,7 @@ import { Environment, Loader } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Physics } from '@react-three/cannon'
+import { Debug, Physics } from '@react-three/cannon'
 import { Ground } from '@/components/Roof/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Overlay/Crosshair'
@@ -13,13 +13,12 @@ import { SettingsOverlay } from '@/components/Overlay/SettingsOverlay'
 import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Overlay/Hud'
-import { Male2 } from '@/components/Avatar/Male2'
+import { Player } from '@/components/Player'
 import { FpsCamera } from '@/components/FpsCamera'
 import { GradientLighting, Gradients } from '@/components/Background'
 import { Scene } from '@/components/Start/Scene'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
-import * as THREE from 'three'
 import { OtherPlayers, OtherPlayers2 } from '@/components/OtherPlayers'
 
 const CanvasContainer = styled.main`
@@ -71,10 +70,10 @@ export default function Home() {
           <>
             <FpsCamera canvasRef={canvasRef} />
             <Physics gravity={[0, -50, 0]}>
-              <Board domNode={canvasNode} />
+              <Board canvasNode={canvasNode} />
               <Ground />
               <Roof />
-              <Male2 />
+              <Player />
             </Physics>
           </>
         )}
@@ -89,7 +88,7 @@ export default function Home() {
           <Hud />
         </>
       )}
-      <SettingsOverlay setDomNode={setCanvasNode} />
+      <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{
           background: 'transparent',
