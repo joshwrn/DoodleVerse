@@ -20,6 +20,7 @@ import { Scene } from '@/components/Start/Scene'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import * as THREE from 'three'
+import { OtherPlayers, OtherPlayers2 } from '@/components/OtherPlayers'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -77,6 +78,7 @@ export default function Home() {
             </Physics>
           </>
         )}
+        <OtherPlayers />
         <ambientLight intensity={0.2} />
         <GradientLighting />
       </Canvas>
@@ -85,9 +87,9 @@ export default function Home() {
         <>
           <Crosshair />
           <Hud />
-          <SettingsOverlay setDomNode={setDomNode} />
         </>
       )}
+      <SettingsOverlay setDomNode={setDomNode} />
       <Loader
         containerStyles={{
           background: 'transparent',
@@ -96,6 +98,7 @@ export default function Home() {
           opacity: 0,
         }}
       />
+      <OtherPlayers2 />
     </CanvasContainer>
   )
 }

@@ -13,6 +13,8 @@ import {
   useMovementStore,
 } from '@/state/movement/controls'
 import { useCameraStore } from '../FpsCamera'
+import { emitPlayerEvent } from '@/server/events/client/playerEvent'
+import { useSocketState } from '@/server/clientSocket'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -95,6 +97,8 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
       .play()
   }, [actions])
 
+  const socket = useSocketState((s) => s.socket)
+
   const updateCameraTarget = (moveX: number, moveZ: number) => {
     if (!camObj) return
     // move camera
@@ -108,6 +112,9 @@ export function Male2(props: JSX.IntrinsicElements['group']) {
     // if (controlsRef.current) {
     //   controlsRef.current.target = cameraTarget
     // }
+    emitPlayerEvent(socket, {
+      position: { z: cameraTarget.z, x: cameraTarget.x },
+    })
     cameraPosRef.current?.getWorldPosition(camObj.position)
   }
 

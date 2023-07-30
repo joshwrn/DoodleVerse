@@ -1,6 +1,10 @@
-import { SocketClientToServer, SocketServerToClient } from '@/pages/api/socket'
+import {
+  ServerPlayer,
+  SocketClientToServer,
+  SocketServerToClient,
+} from '@/pages/api/socket'
 import { usePlayerStore } from '@/state/settings/player'
-import { useEffect, useLayoutEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { Socket } from 'socket.io-client'
 import { io } from 'socket.io-client'
 import { create } from 'zustand'
@@ -9,6 +13,7 @@ import { loadCanvas } from './events/client/loadCanvas'
 import { totalUsers } from './events/client/totalUsers'
 
 export type ClientSocket = Socket<SocketServerToClient, SocketClientToServer>
+
 let socket: ClientSocket
 
 export const useSocketState = create<{
@@ -32,8 +37,9 @@ export const useSockets = ({
     setSocket: state.setSocket,
     setTotalUsers: state.setTotalUsers,
   }))
-  const { userId } = usePlayerStore((state) => ({
+  const { userId, setOtherPlayers } = usePlayerStore((state) => ({
     userId: state.userId,
+    setOtherPlayers: state.setOtherPlayers,
   }))
   useLayoutEffect(() => {
     if (!domNode) return
@@ -47,5 +53,38 @@ export const useSockets = ({
     totalUsers(socket, setTotalUsers)
     makeBrushStroke(socket, userId, canvasNode)
     loadCanvas(socket, canvasNode)
+
+    socket.on('playerEvent', (data) => {
+      if (data.userId === usePlayerStore.getState().userId) return
+      console.log('playerEvent', data)
+      const otherPlayers = usePlayerStore.getState().otherPlayers
+      const player = otherPlayers.find((p) => p.userId === data.userId)
+      if (!player) return otherPlayers
+      const update = [
+        ...otherPlayers.filter((p) => p.userId !== data.userId),
+        {
+          ...player,
+          ...data,
+        },
+      ]
+      usePlayerStore.getState().setOtherPlayers(update)
+    })
+
+    socket.on('playerJoined', (data) => {
+      console.log('playerJoined', data.userId, usePlayerStore.getState().userId)
+      if (data.userId === usePlayerStore.getState().userId) return
+      console.log('playerJoined', data)
+      const otherPlayers = usePlayerStore.getState().otherPlayers
+      const update = [...otherPlayers, data]
+      console.log('updating players')
+      usePlayerStore.getState().setOtherPlayers(update)
+    })
+
+    socket.on('players', (data) => {
+      console.log('players', data)
+      if (data.for === usePlayerStore.getState().userId) {
+        usePlayerStore.getState().setOtherPlayers(data.players)
+      }
+    })
   }
 }

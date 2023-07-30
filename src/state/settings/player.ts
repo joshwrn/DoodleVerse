@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { nanoid } from 'nanoid'
 import Player from '@/components/Player'
+import { ServerPlayer } from '@/pages/api/socket'
 
 export type Player = {
   userId: string
@@ -8,21 +9,22 @@ export type Player = {
   avatar: number
   position: {
     x: number
-    y: number
     z: number
   }
   rotationY: number
 }
 
+const id = nanoid()
+
 export const usePlayerStore = create<{
   userId: string
   setUserId: (userId: string) => void
-  otherPlayers: Player[]
-  setOtherPlayers: (otherPlayers: Player[]) => void
+  otherPlayers: ServerPlayer[]
+  setOtherPlayers: (otherPlayers: ServerPlayer[]) => void
   avatar: number | null
   setAvatar: (avatar: number) => void
 }>((set) => ({
-  userId: nanoid(),
+  userId: id,
   setUserId: (userId) => set({ userId }),
   avatar: null,
   setAvatar: (avatar) => set({ avatar }),

@@ -1,3 +1,4 @@
+import { useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 import { useSettingsStore } from '@/state/settings/settings'
 import type { FC } from 'react'
@@ -71,9 +72,25 @@ export const SelectOverlay: FC = () => {
       setAgreedToTerms: s.setAgreedToTerms,
     }))
 
-  const { avatar } = usePlayerStore((s) => ({
+  const { avatar, userId, setUserId } = usePlayerStore((s) => ({
     avatar: s.avatar,
+    userId: s.userId,
+    setUserId: s.setUserId,
   }))
+
+  const socket = useSocketState((s) => s.socket)
+
+  const agreeToTerms = () => {
+    setAgreedToTerms(true)
+    if (!socket || !avatar) return
+    socket.emit('join', {
+      avatar,
+      userId,
+      rotationY: 0,
+      position: { x: 0, z: 0 },
+      brushColor: '#ffffff',
+    })
+  }
 
   return (
     <>
@@ -96,7 +113,7 @@ export const SelectOverlay: FC = () => {
             <h1>Disclaimer</h1>
           </Header>
           <Terms />
-          <Button onClick={() => setAgreedToTerms(true)}>I Understand</Button>
+          <Button onClick={() => agreeToTerms()}>I Understand</Button>
         </Wrapper>
       )}
     </>

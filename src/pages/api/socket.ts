@@ -11,6 +11,7 @@ import { CANVAS_RESOLUTION } from '@/state/constants'
 import { MongoClient } from 'mongodb'
 import { LoadCanvas } from '@/server/events/server/loadCanvas'
 import { disconnect } from '@/server/events/server/disconnect'
+import { Player } from '@/state/settings/player'
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
@@ -44,17 +45,36 @@ if (process.env.NODE_ENV === 'development') {
 const canvas = createCanvas(CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
 const ctx = canvas.getContext('2d')
 
+export type PlayerEvents = {
+  position: { x: number; z: number }
+  rotationY: number
+  brushColor: string
+}
+
+export type PlayerEvent = { userId: string } & Partial<PlayerEvents>
+
+export type ServerPlayer = Player & {
+  socketId: string
+}
+
 export type SocketClientToServer = {
   makeBrushStroke: (data: MakeBrushStroke) => void
+  playerEvent: (data: PlayerEvent) => void
+  join: (data: Player) => void
 }
 export type SocketServerToClient = {
   loadCanvas: (data: string) => void
   makeBrushStroke: (data: MakeBrushStroke) => void
+  playerEvent: (data: PlayerEvent) => void
   totalUsers: (data: number) => void
+  playerJoined: (data: ServerPlayer) => void
+  players: (data: { for: string; players: ServerPlayer[] }) => void
 }
 
 export type MySocket = Socket<SocketClientToServer, SocketServerToClient>
 export type MyServer = Server<SocketClientToServer, SocketServerToClient>
+
+const users = new Map<string, ServerPlayer>()
 
 export default async function handler(
   req: NextApiRequest,
@@ -89,8 +109,44 @@ export default async function handler(
 
     makeBrushStroke(socket, io, ctx)
     LoadCanvas(socket, io, canvas, db)
-    disconnect(socket, io, canvas, db)
+    disconnect(socket, io, canvas, db, users)
     io.sockets.emit(`totalUsers`, io.engine.clientsCount)
+
+    console.log('players', Array.from(users.values()))
+
+    socket.on(`playerEvent`, (data) => {
+      io.sockets.emit(`playerEvent`, data)
+      if (!users.has(data.userId)) return
+      const user = users.get(data.userId)
+      if (!user) return
+      const update: ServerPlayer = {
+        ...user,
+        rotationY: data.rotationY ?? user.rotationY,
+        position: {
+          ...user.position,
+          ...data.position,
+        },
+        brushColor: data.brushColor ?? user.brushColor,
+      }
+      users.set(data.userId, update)
+    })
+
+    socket.on('join', (data) => {
+      socket.emit('players', {
+        for: data.userId,
+        players: Array.from(users.values()),
+      })
+
+      users.set(data.userId, {
+        ...data,
+        socketId: socket.id,
+      })
+
+      io.sockets.emit('playerJoined', {
+        ...data,
+        socketId: socket.id,
+      })
+    })
   }
 
   io.on(`connection`, onConnection)
