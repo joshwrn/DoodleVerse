@@ -97,7 +97,7 @@ export default function Home() {
           opacity: 0,
         }}
       />
-      <OtherPlayers2 />
+      {/* <OtherPlayers2 /> */}
     </CanvasContainer>
   )
 }

@@ -10,6 +10,7 @@ import { totalUsers } from './events/client/totalUsers'
 import { loadPlayers } from './events/client/loadPlayers'
 import { playerEvent } from './events/client/playerEvent'
 import { playerJoined } from './events/client/playerJoined'
+import { playerLeft } from './events/client/playerLeft'
 
 export type ClientSocket = Socket<SocketServerToClient, SocketClientToServer>
 
@@ -54,5 +55,6 @@ export const useSockets = ({
     loadPlayers(socket)
     playerEvent(socket)
     playerJoined(socket)
+    playerLeft(socket)
   }
 }

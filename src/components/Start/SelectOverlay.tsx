@@ -1,4 +1,5 @@
 import { useSocketState } from '@/server/clientSocket'
+import { useDrawStore } from '@/state/settings/draw'
 import { usePlayerStore } from '@/state/settings/player'
 import { useSettingsStore } from '@/state/settings/settings'
 import type { FC } from 'react'
@@ -72,12 +73,12 @@ export const SelectOverlay: FC = () => {
       setAgreedToTerms: s.setAgreedToTerms,
     }))
 
-  const { avatar, userId, setUserId } = usePlayerStore((s) => ({
+  const { avatar, userId } = usePlayerStore((s) => ({
     avatar: s.avatar,
     userId: s.userId,
-    setUserId: s.setUserId,
   }))
 
+  const brushColor = useDrawStore((s) => s.brushColor)
   const socket = useSocketState((s) => s.socket)
 
   const agreeToTerms = () => {
@@ -87,8 +88,8 @@ export const SelectOverlay: FC = () => {
       avatar,
       userId,
       rotationY: 0,
-      position: { x: 0, z: 0 },
-      brushColor: '#ffffff',
+      position: { x: 100, z: -10 },
+      brushColor,
     })
   }
 

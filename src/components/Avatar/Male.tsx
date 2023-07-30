@@ -62,13 +62,13 @@ export function Male({
     <group
       ref={group}
       scale={30}
-      position={[0, -7, 0]}
+      position={[0, -3, 0]}
       rotation={[0, Math.PI, 0]}
       dispose={null}
       {...props}
     >
       <pointLight
-        intensity={5}
+        intensity={10}
         distance={30}
         position={[-0.25, 1, 0]}
         color={brushColor ?? '#ffffff'}
