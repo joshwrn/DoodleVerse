@@ -1,10 +1,9 @@
-import { motion } from 'framer-motion'
 import type { FC } from 'react'
 import React from 'react'
 
 import styled from 'styled-components'
 
-const ControlsContainer = styled(motion.div)`
+const ControlsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -62,11 +61,7 @@ const Keys = ['A', 'S', 'D']
 
 export const ControlsHud: FC = () => {
   return (
-    <ControlsContainer
-      animate={{ y: 0, opacity: 1 }}
-      exit={{ y: `100%`, opacity: 0 }}
-      initial={{ y: `100%`, opacity: 0 }}
-    >
+    <ControlsContainer>
       <div>
         <Key>
           <div>

@@ -182,8 +182,8 @@ export const SettingsOverlay: FC<{
             />
             <Wrapper
               animate={{ y: 0, opacity: 1, x: `-50%` }}
-              exit={{ y: `100%`, opacity: 0, x: `-50%` }}
-              initial={{ y: `100%`, opacity: 0, x: `-50%` }}
+              exit={{ y: `calc(100% + 50px)`, opacity: 0, x: `-50%` }}
+              initial={{ y: `calc(100% + 50px)`, opacity: 0, x: `-50%` }}
               onClick={(e) => {
                 e.stopPropagation()
                 e.nativeEvent.stopImmediatePropagation()
