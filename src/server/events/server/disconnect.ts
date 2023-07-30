@@ -17,7 +17,6 @@ export const disconnect = (
 ) => {
   socket.on(`disconnect`, async () => {
     console.log(`Disconnected`)
-    socket.broadcast.emit(`totalUsers`, io.engine.clientsCount)
     removeUser(users, socket)
     if (io.engine.clientsCount === 0) {
       const inserted = await db.collection('mural-collection').insertOne({

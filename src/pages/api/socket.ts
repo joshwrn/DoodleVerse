@@ -43,7 +43,6 @@ export type SocketServerToClient = {
   loadCanvas: (data: string) => void
   makeBrushStroke: (data: MakeBrushStroke) => void
   playerEvent: (data: PlayerEvent) => void
-  totalUsers: (data: number) => void
   playerJoined: (data: ServerPlayer) => void
   playerLeft: (data: string) => void
   loadPlayers: (data: { for: string; players: ServerPlayer[] }) => void
@@ -90,8 +89,6 @@ export default async function handler(
     playerEvent(socket, users)
     disconnect(socket, io, canvas, db, users)
     join(socket, users)
-
-    io.sockets.emit(`totalUsers`, io.engine.clientsCount)
   }
 
   io.on(`connection`, onConnection)

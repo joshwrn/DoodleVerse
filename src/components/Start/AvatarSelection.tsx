@@ -7,7 +7,7 @@ import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
 
-export const Scene: FC = () => {
+export const AvatarSelection: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
     setAvatar: s.setAvatar,
     avatar: s.avatar,

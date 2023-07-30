@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { PiPaintBrushDuotone } from 'react-icons/pi'
 import { AiOutlineUser } from 'react-icons/ai'
 import { useSocketState } from '@/server/clientSocket'
+import { usePlayerStore } from '@/state/settings/player'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -38,15 +39,15 @@ const SettingsContainer = styled.div`
 `
 
 export const Hud: FC = () => {
-  const { totalUsers } = useSocketState((s) => ({
-    totalUsers: s.totalUsers,
+  const { otherPlayers } = usePlayerStore((s) => ({
+    otherPlayers: s.otherPlayers,
   }))
   return (
     <Wrapper>
       <Container>
         <SettingsContainer>
           <AiOutlineUser />
-          <p>{totalUsers}</p>
+          <p>{otherPlayers.length + 1}</p>
         </SettingsContainer>
         <SettingsContainer>
           <PiPaintBrushDuotone />

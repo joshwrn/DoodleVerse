@@ -16,7 +16,7 @@ import { Hud } from '@/components/Overlay/Hud'
 import { Player } from '@/components/Player'
 import { FpsCamera } from '@/components/FpsCamera'
 import { GradientLighting, Gradients } from '@/components/Background'
-import { Scene } from '@/components/Start/AvatarSelection'
+import { AvatarSelection } from '@/components/Start/AvatarSelection'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { OtherPlayers } from '@/components/OtherPlayers'
@@ -65,7 +65,7 @@ export default function Home() {
           files={['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png']}
           path="skybox/"
         />
-        {!avatarSelected && <Scene />}
+        {!avatarSelected && <AvatarSelection />}
         {agreedToTerms && (
           <>
             <FpsCamera canvasRef={canvasRef} />

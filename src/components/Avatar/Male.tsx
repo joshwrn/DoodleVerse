@@ -7,7 +7,6 @@ import * as THREE from 'three'
 import React, { useRef } from 'react'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
-import { useDrawStore } from '@/state/settings/draw'
 import { useEyesFollowMouse } from './eyeMovement'
 
 type GLTFResult = GLTF & {
