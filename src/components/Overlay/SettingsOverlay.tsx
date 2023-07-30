@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import React, { useCallback } from 'react'
+import React, { use, useCallback } from 'react'
 
 import styled from 'styled-components'
 import { useDrawStore } from '@/state/settings/draw'
@@ -9,6 +9,8 @@ import {
 } from '@/state/settings/settings'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ControlsHud } from './ControlsHud'
+import { emitPlayerEvent } from '@/server/events/client/playerEvent'
+import { useSocketState } from '@/server/clientSocket'
 
 const Backdrop = styled(motion.div)`
   position: absolute;
@@ -105,11 +107,11 @@ const Wrapper = styled(motion.div)`
 `
 
 export const SettingsOverlay: FC<{
-  setDomNode: (node: HTMLCanvasElement) => void
-}> = ({ setDomNode }) => {
+  setCanvasNode: (node: HTMLCanvasElement) => void
+}> = ({ setCanvasNode }) => {
   useSettingsControls()
   const onRefChange = useCallback((node: HTMLCanvasElement) => {
-    setDomNode(node)
+    setCanvasNode(node)
   }, [])
   const {
     color,
@@ -143,10 +145,22 @@ export const SettingsOverlay: FC<{
 
   const pickFromHistory = (color: string) => {
     setColor(color)
+    emitPlayerEvent(socket, {
+      brushColor: color,
+    })
     const newColorHistory = [...colorHistory]
     const filtered = newColorHistory.filter((c) => c !== color)
     filtered.unshift(color)
     setColorHistory(filtered)
+  }
+
+  const socket = useSocketState((s) => s.socket)
+
+  const handleColorBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    updateColorHistory(e.target.value)
+    emitPlayerEvent(socket, {
+      brushColor: e.target.value,
+    })
   }
 
   return (
@@ -197,7 +211,7 @@ export const SettingsOverlay: FC<{
                       name="color"
                       value={color}
                       onChange={(e) => setColor(e.target.value)}
-                      onBlur={(e) => updateColorHistory(e.target.value)}
+                      onBlur={(e) => handleColorBlur(e)}
                     />
                   </Row>
                   <ColorHistory>

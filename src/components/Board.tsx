@@ -34,7 +34,11 @@ const raycaster = new THREE.Raycaster(
   MAX_DISTANCE_FROM_BOARD
 )
 
-export const Board = ({ domNode }: { domNode: HTMLCanvasElement | null }) => {
+export const Board = ({
+  canvasNode: domNode,
+}: {
+  canvasNode: HTMLCanvasElement | null
+}) => {
   const [ref] = useBox<Mesh>(() => ({
     position: [BOARD_DIMENSIONS.width / 2, BOARD_DIMENSIONS.height / 2, 40],
     args: [BOARD_DIMENSIONS.width, BOARD_DIMENSIONS.height, 1],

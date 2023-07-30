@@ -4,7 +4,7 @@ import { Environment, Loader } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Physics } from '@react-three/cannon'
+import { Debug, Physics } from '@react-three/cannon'
 import { Ground } from '@/components/Roof/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Overlay/Crosshair'
@@ -13,13 +13,13 @@ import { SettingsOverlay } from '@/components/Overlay/SettingsOverlay'
 import { useSockets } from '@/server/clientSocket'
 import { Roof } from '@/components/Roof/Roof'
 import { Hud } from '@/components/Overlay/Hud'
-import { Male2 } from '@/components/Avatar/Male2'
+import { Player } from '@/components/Player'
 import { FpsCamera } from '@/components/FpsCamera'
 import { GradientLighting, Gradients } from '@/components/Background'
 import { Scene } from '@/components/Start/Scene'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
-import * as THREE from 'three'
+import { OtherPlayers, OtherPlayers2 } from '@/components/OtherPlayers'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -34,9 +34,9 @@ const CanvasContainer = styled.main`
 `
 
 export default function Home() {
-  const [domNode, setDomNode] = useState<HTMLCanvasElement | null>(null)
+  const [canvasNode, setCanvasNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
-  useSockets({ domNode })
+  useSockets({ canvasNode: canvasNode })
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const { agreedToTerms, avatarSelected } = useSettingsStore((s) => ({
     agreedToTerms: s.agreedToTerms,
@@ -55,7 +55,7 @@ export default function Home() {
         }}
         camera={{
           fov: 80,
-          position: [0, 13, 0],
+          position: [0, 12, 0],
           rotation: [0, 0, 0],
         }}
         id="canvas"
@@ -70,13 +70,14 @@ export default function Home() {
           <>
             <FpsCamera canvasRef={canvasRef} />
             <Physics gravity={[0, -50, 0]}>
-              <Board domNode={domNode} />
+              <Board canvasNode={canvasNode} />
               <Ground />
               <Roof />
-              <Male2 />
+              <Player />
             </Physics>
           </>
         )}
+        <OtherPlayers />
         <ambientLight intensity={0.2} />
         <GradientLighting />
       </Canvas>
@@ -85,9 +86,9 @@ export default function Home() {
         <>
           <Crosshair />
           <Hud />
-          <SettingsOverlay setDomNode={setDomNode} />
         </>
       )}
+      <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{
           background: 'transparent',
@@ -96,6 +97,7 @@ export default function Home() {
           opacity: 0,
         }}
       />
+      {/* <OtherPlayers2 /> */}
     </CanvasContainer>
   )
 }

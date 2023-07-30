@@ -1,3 +1,5 @@
+import { useSocketState } from '@/server/clientSocket'
+import { emitPlayerEvent } from '@/server/events/client/playerEvent'
 import { useSettingsStore } from '@/state/settings/settings'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useMemo, useRef } from 'react'
@@ -41,6 +43,7 @@ export const useFpsCamera = ({
   const camObj = useMemo(() => new THREE.Object3D(), [])
   const { setCamObj } = useCameraStore()
   const movement = useRef({ x: 0, y: 0 })
+  const socket = useSocketState((s) => s.socket)
 
   const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
@@ -120,13 +123,18 @@ export const useFpsCamera = ({
   useFrame((state, delta) => {
     if (!camObj || !movement.current) return
     const { x, y } = movement.current
-    if (x || y) {
+    if (x) {
       // y is left/right
       camObj.rotation.y -= x * 0.002
+      emitPlayerEvent(socket, {
+        rotationY: camObj.rotation.y,
+      })
+      movement.current.x = 0
+    }
+    if (y) {
       // x is up/down
       setRotationX(camera, y)
 
-      movement.current.x = 0
       movement.current.y = 0
     }
   })

@@ -51,7 +51,7 @@ export const useEyesFollowMouse = (
   }
 
   useFrame(() => {
-    if (nodes.LeftEye && nodes.RightEye) {
+    if (nodes.LeftEye && nodes.RightEye && isSelection) {
       nodes.LeftEye.rotation.x = motionX.get()
       nodes.LeftEye.rotation.z = motionZ.get()
       nodes.RightEye.rotation.x = motionX.get()

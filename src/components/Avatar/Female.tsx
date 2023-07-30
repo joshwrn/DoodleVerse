@@ -45,9 +45,11 @@ type GLTFActions = Record<ActionName, THREE.AnimationAction>
 
 export function Woman({
   isSelection,
+  brushColor,
   ...props
 }: {
   isSelection: boolean
+  brushColor?: string
 } & JSX.IntrinsicElements['group']) {
   const group = useRef<THREE.Group>(null)
   const { nodes, materials, animations } = useGLTF(
@@ -55,23 +57,20 @@ export function Woman({
   ) as GLTFResult
   const { actions } = useAnimations<THREE.AnimationClip>(animations, group)
   useEyesFollowMouse(nodes, actions, isSelection)
-  const { brushColor } = useDrawStore((s) => ({
-    brushColor: s.brushColor,
-  }))
   return (
     <group
       ref={group}
       scale={30}
-      position={[0, -7, 10]}
+      position={[0, -3, 0]}
       rotation={[0, Math.PI, 0]}
       dispose={null}
       {...props}
     >
       <pointLight
-        intensity={5}
+        intensity={10}
         distance={30}
         position={[-0.25, 1, 0]}
-        color={brushColor}
+        color={brushColor ?? '#ffffff'}
       />
       <group name="Scene">
         <group name="AvatarRoot">

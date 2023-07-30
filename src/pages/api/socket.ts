@@ -8,53 +8,54 @@ import { Server } from 'socket.io'
 import { createCanvas } from 'canvas'
 import { CANVAS_RESOLUTION } from '@/state/constants'
 
-import { MongoClient } from 'mongodb'
 import { LoadCanvas } from '@/server/events/server/loadCanvas'
 import { disconnect } from '@/server/events/server/disconnect'
+import { Player } from '@/state/settings/player'
+import { join } from '@/server/events/server/join'
+import { playerEvent } from '@/server/events/server/playerEvent'
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
-}
+import { initMongo } from '@/server/mongodb'
 
-const uri = process.env.MONGODB_URI
-const options = {}
-
-let client
-let clientPromise: Promise<MongoClient>
-
-if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>
-  }
-
-  if (!globalWithMongo._mongoClientPromise) {
-    client = new MongoClient(uri, options)
-    globalWithMongo._mongoClientPromise = client.connect()
-  }
-  clientPromise = globalWithMongo._mongoClientPromise
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options)
-  clientPromise = client.connect()
-}
+const clientPromise = initMongo()
 
 // SOCKET.IO
 const canvas = createCanvas(CANVAS_RESOLUTION.width, CANVAS_RESOLUTION.height)
 const ctx = canvas.getContext('2d')
 
+export type PlayerEvents = {
+  position: { x: number; z: number }
+  rotationY: number
+  brushColor: string
+}
+
+export type PlayerEvent = { userId: string } & Partial<PlayerEvents>
+
+export type ServerPlayer = Player & {
+  socketId: string
+}
+
 export type SocketClientToServer = {
   makeBrushStroke: (data: MakeBrushStroke) => void
+  playerEvent: (data: PlayerEvent) => void
+  join: (data: Player) => void
 }
 export type SocketServerToClient = {
   loadCanvas: (data: string) => void
   makeBrushStroke: (data: MakeBrushStroke) => void
+  playerEvent: (data: PlayerEvent) => void
   totalUsers: (data: number) => void
+  playerJoined: (data: ServerPlayer) => void
+  playerLeft: (data: string) => void
+  loadPlayers: (data: { for: string; players: ServerPlayer[] }) => void
 }
 
 export type MySocket = Socket<SocketClientToServer, SocketServerToClient>
 export type MyServer = Server<SocketClientToServer, SocketServerToClient>
+
+const users = new Map<string, ServerPlayer>()
+
+// socket.broadcast.emit = send to everyone except the sender
+// io.sockets.emit = send to everyone including the sender
 
 export default async function handler(
   req: NextApiRequest,
@@ -68,7 +69,6 @@ export default async function handler(
 ): Promise<void> {
   console.log('Starting Socket.io 🚀')
   if (res?.socket?.server?.io) {
-    console.log(`Already set up`)
     res.end()
     return
   }
@@ -85,16 +85,16 @@ export default async function handler(
   const db = client.db('mural-db')
 
   const onConnection = async (socket: MySocket) => {
-    console.log(`Total users: ${io.engine.clientsCount}`)
-
     makeBrushStroke(socket, io, ctx)
     LoadCanvas(socket, io, canvas, db)
-    disconnect(socket, io, canvas, db)
+    playerEvent(socket, users)
+    disconnect(socket, io, canvas, db, users)
+    join(socket, users)
+
     io.sockets.emit(`totalUsers`, io.engine.clientsCount)
   }
 
   io.on(`connection`, onConnection)
 
-  console.log(`Set up`)
   res.end()
 }

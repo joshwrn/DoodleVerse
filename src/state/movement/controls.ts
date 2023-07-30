@@ -1,4 +1,4 @@
-import { isHotkeyPressed, useHotkeys } from 'react-hotkeys-hook'
+import { useHotkeys } from 'react-hotkeys-hook'
 import { create } from 'zustand'
 
 export type Movement = {

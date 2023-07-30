@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 import { create } from 'zustand'
 
+const randomColor = () =>
+  `#${Math.floor(Math.random() * 16777215).toString(16)}`
+
 export const useDrawStore = create<{
   distance: number | null
   setDistance: (distance: number | null) => void
@@ -23,10 +26,16 @@ export const useDrawStore = create<{
   mouseDown: false,
   setMouseDown: (mouseDown) => set({ mouseDown }),
 
-  brushColor: `#651e3e`,
+  brushColor: randomColor(),
   setBrushColor: (brushColor) => set({ brushColor }),
 
-  colorHistory: [`#651e3e`, `#6C5B7B`, `#A8E6CE`, `#355C7D`, `#F8B195`],
+  colorHistory: [
+    randomColor(),
+    randomColor(),
+    randomColor(),
+    randomColor(),
+    randomColor(),
+  ],
   setColorHistory: (colorHistory) => set({ colorHistory }),
 
   brushSize: 30,
