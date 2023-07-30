@@ -1,13 +1,17 @@
 import { PlayerEvent } from '@/pages/api/socket'
-import { ClientSocket } from '@/server/clientSocket'
+import { ClientSocket, useSocketState } from '@/server/clientSocket'
 import { usePlayerStore } from '@/state/settings/player'
 
-export const emitPlayerEvent = (
-  socket: ClientSocket | null,
-  data: PlayerEvent
-) => {
-  if (!socket) return
-  socket.emit('playerEvent', data)
+export const useEmitPlayerEvent = () => {
+  const socket = useSocketState((state) => state.socket)
+  const userId = usePlayerStore((state) => state.userId)
+  return (data: Omit<PlayerEvent, 'userId'>) => {
+    if (!socket) return
+    socket.emit('playerEvent', {
+      ...data,
+      userId,
+    })
+  }
 }
 
 export const playerEvent = (socket: ClientSocket) => {

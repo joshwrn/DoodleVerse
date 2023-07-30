@@ -6,11 +6,9 @@ import {
   useMovementStore,
 } from '@/state/movement/controls'
 import { useCameraStore } from './FpsCamera'
-import { emitPlayerEvent } from '@/server/events/client/playerEvent'
-import { useSocketState } from '@/server/clientSocket'
+import { useEmitPlayerEvent } from '@/server/events/client/playerEvent'
 import { useSphere } from '@react-three/cannon'
 import type { Mesh } from 'three'
-import { usePlayerStore } from '@/state/settings/player'
 
 const SPEED = 20
 const direction = new THREE.Vector3()
@@ -21,9 +19,7 @@ const speed = new THREE.Vector3()
 export function Player(props: JSX.IntrinsicElements['group']) {
   const { forward, backward, left, right, sprint } = useMovementStore((s) => s)
   const camObj = useCameraStore((s) => s.camObj)
-  const socket = useSocketState((s) => s.socket)
-  const userId = usePlayerStore((s) => s.userId)
-
+  const emitPlayerEvent = useEmitPlayerEvent()
   useMovementControls()
 
   const [playerRef, playerApi] = useSphere<Mesh>(() => ({
@@ -49,8 +45,7 @@ export function Player(props: JSX.IntrinsicElements['group']) {
     if (!camObj || !playerRef.current) return
 
     if (forward || backward || left || right) {
-      emitPlayerEvent(socket, {
-        userId,
+      emitPlayerEvent({
         position: {
           z: camObj.position.z,
           x: camObj.position.x,
