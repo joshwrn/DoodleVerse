@@ -14,6 +14,9 @@ export const useSettingsStore = create<{
 
   soundEnabled: boolean
   setSoundEnabled: (soundEnabled: boolean) => void
+
+  musicEnabled: boolean
+  setMusicEnabled: (musicEnabled: boolean) => void
 }>((set) => ({
   settingsOpen: false,
   setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
@@ -24,8 +27,11 @@ export const useSettingsStore = create<{
   agreedToTerms: false,
   setAgreedToTerms: (agreedToTerms) => set({ agreedToTerms }),
 
-  soundEnabled: process.env.NODE_ENV === `production` ? true : false,
+  soundEnabled: true,
   setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
+
+  musicEnabled: process.env.NODE_ENV === `production` ? true : false,
+  setMusicEnabled: (musicEnabled) => set({ musicEnabled }),
 }))
 
 export const useSettingsControls = () => {

@@ -37,8 +37,12 @@ const raycaster = new THREE.Raycaster(
 
 const useDrawSound = (isDrawing: boolean) => {
   const soundEnabled = useSettingsStore((s) => s.soundEnabled)
+  const { distance } = useDrawStore((s) => ({
+    distance: s.distance,
+  }))
+  const v = 2 / (distance ?? 1)
   const [play, sound] = useSound(`/sounds/marker.wav`, {
-    volume: 0.03,
+    volume: isFinite(v) ? v : 0.1,
     loop: true,
     interrupt: true,
     soundEnabled,

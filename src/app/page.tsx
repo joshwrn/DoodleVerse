@@ -36,26 +36,26 @@ const CanvasContainer = styled.main`
 
 const useMusic = () => {
   const [loaded, setLoaded] = useState(false)
-  const soundEnabled = useSettingsStore((s) => s.soundEnabled)
+  const musicEnabled = useSettingsStore((s) => s.musicEnabled)
 
-  const [play, sound] = useSound(`/sounds/lofi.mp3`, {
+  const [play, sound] = useSound(`/sounds/ambient.ogg`, {
     volume: 0.08,
     loop: true,
     interrupt: true,
-    soundEnabled: soundEnabled,
+    soundEnabled: musicEnabled,
     onload: () => {
       setLoaded(true)
     },
   })
 
   useEffect(() => {
-    if (loaded && soundEnabled) {
+    if (loaded && musicEnabled) {
       play()
     }
-    if (!soundEnabled) {
+    if (!musicEnabled) {
       sound.stop()
     }
-  }, [loaded, soundEnabled, play])
+  }, [loaded, musicEnabled, play])
 }
 
 export default function Home() {
@@ -118,7 +118,7 @@ export default function Home() {
       <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{
-          background: 'transparent',
+          background: 'black',
         }}
         dataStyles={{
           opacity: 0,

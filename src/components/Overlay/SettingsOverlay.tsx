@@ -25,7 +25,7 @@ const Container = styled(motion.div)`
   min-width: 500px;
   max-width: 700px;
   background-color: rgba(255, 255, 255, 1);
-  height: 250px;
+  height: 300px;
   border-radius: 50px;
   padding: 50px;
   color: black;
@@ -37,7 +37,6 @@ const Container = styled(motion.div)`
 const Row = styled.div`
   display: flex;
   width: 100%;
-  height: 20px;
   align-items: center;
   justify-content: space-between;
   z-index: 1;
@@ -45,6 +44,9 @@ const Row = styled.div`
     cursor: pointer;
   }
   white-space: nowrap;
+  h1 {
+    color: black;
+  }
 `
 const RowWrapper = styled.div`
   display: flex;
@@ -62,7 +64,6 @@ const ColorHistory = styled.div`
   align-items: center;
   gap: 50px;
   justify-content: space-between;
-  height: 20px;
   > div {
     display: flex;
     gap: 10px;
@@ -135,12 +136,16 @@ export const SettingsOverlay: FC<{
     soundEnabled,
     setSoundEnabled,
     agreedToTerms,
+    setMusicEnabled,
+    musicEnabled,
   } = useSettingsStore((s) => ({
     setSettingsOpen: s.setSettingsOpen,
     settingsOpen: s.settingsOpen,
     soundEnabled: s.soundEnabled,
     setSoundEnabled: s.setSoundEnabled,
     agreedToTerms: s.agreedToTerms,
+    setMusicEnabled: s.setMusicEnabled,
+    musicEnabled: s.musicEnabled,
   }))
 
   const emitPlayerEvent = useEmitPlayerEvent()
@@ -202,7 +207,7 @@ export const SettingsOverlay: FC<{
               <Container>
                 <Row
                   style={{
-                    paddingBottom: `40px`,
+                    paddingBottom: `20px`,
                   }}
                 >
                   <h1>Adjust</h1>
@@ -254,11 +259,19 @@ export const SettingsOverlay: FC<{
                     />
                   </Row>
                   <Row>
-                    <p>Sound</p>
+                    <p>Sound Effects</p>
                     <input
                       type="checkbox"
                       checked={soundEnabled}
                       onChange={(e) => setSoundEnabled(e.target.checked)}
+                    />
+                  </Row>
+                  <Row>
+                    <p>Music</p>
+                    <input
+                      type="checkbox"
+                      checked={musicEnabled}
+                      onChange={(e) => setMusicEnabled(e.target.checked)}
                     />
                   </Row>
                 </RowWrapper>

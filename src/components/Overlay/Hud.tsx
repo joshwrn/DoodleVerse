@@ -44,8 +44,9 @@ export const Hud: FC = () => {
   const { otherPlayers } = usePlayerStore((s) => ({
     otherPlayers: s.otherPlayers,
   }))
-  const { soundEnabled } = useSettingsStore((s) => ({
+  const { soundEnabled, musicEnabled } = useSettingsStore((s) => ({
     soundEnabled: s.soundEnabled,
+    musicEnabled: s.musicEnabled,
   }))
   return (
     <Wrapper>
@@ -55,7 +56,11 @@ export const Hud: FC = () => {
           <p>{otherPlayers.length + 1}</p>
         </SettingsContainer>
         <SettingsContainer>
-          {soundEnabled ? <HiOutlineSpeakerWave /> : <HiOutlineSpeakerXMark />}
+          {soundEnabled || musicEnabled ? (
+            <HiOutlineSpeakerWave />
+          ) : (
+            <HiOutlineSpeakerXMark />
+          )}
         </SettingsContainer>
         <SettingsContainer>
           <PiPaintBrushDuotone />
