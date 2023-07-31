@@ -79,7 +79,7 @@ export const SelectOverlay: FC = () => {
 
   const socket = useSocketState((s) => s.socket)
 
-  const [play] = useSound(`/sounds/button.mp3`, {
+  const [play] = useSound(`/sounds/button.wav`, {
     volume: 0.5,
     loop: false,
     interrupt: true,

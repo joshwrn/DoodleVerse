@@ -64,8 +64,8 @@ export const Board = ({
   }))
   const [isDrawing, setIsDrawing] = React.useState(false)
 
-  const [play, sound] = useSound(`/sounds/marker.mp3`, {
-    volume: 1,
+  const [play, sound] = useSound(`/sounds/marker.wav`, {
+    volume: 0.03,
     loop: true,
     interrupt: true,
   })

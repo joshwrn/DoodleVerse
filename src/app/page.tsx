@@ -38,7 +38,7 @@ const useMusic = () => {
   const [loaded, setLoaded] = useState(false)
 
   const [play, sound] = useSound(`/sounds/lofi.mp3`, {
-    volume: 0.1,
+    volume: 0.08,
     loop: true,
     interrupt: true,
     onload: () => {

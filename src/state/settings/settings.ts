@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { useHotkeys } from 'react-hotkeys-hook'
+import useSound from 'use-sound'
 
 export const useSettingsStore = create<{
   settingsOpen: boolean
@@ -26,11 +27,17 @@ export const useSettingsControls = () => {
     setSettingsOpen: s.setSettingsOpen,
     settingsOpen: s.settingsOpen,
   }))
+  const [play] = useSound(`/sounds/hover.mp3`, {
+    volume: 0.25,
+    loop: false,
+    interrupt: false,
+  })
   useHotkeys(
     [`tab`],
     (e) => {
       e.preventDefault()
       setSettingsOpen(!settingsOpen)
+      play()
     },
     {
       keydown: true,

@@ -15,9 +15,9 @@ export const AvatarSelection: FC = () => {
   }))
   const [hoveredAvatar, setHoveredAvatar] = React.useState<number | null>(null)
   const [play] = useSound(`/sounds/hover.mp3`, {
-    volume: 0.5,
+    volume: 0.25,
     loop: false,
-    interrupt: true,
+    interrupt: false,
   })
   useEffect(() => {
     if (hoveredAvatar) {
