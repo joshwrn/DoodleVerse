@@ -147,13 +147,15 @@ export const SettingsOverlay: FC<{
 
   const updateColorHistory = (color: string) => {
     const newColorHistory = [...colorHistory]
-    newColorHistory.unshift(color)
     if (colorHistory.includes(color)) {
-      newColorHistory.filter((c) => c !== color)
+      const filtered = newColorHistory.filter((c) => c !== color)
+      filtered.unshift(color)
+      setColorHistory(filtered)
     } else {
+      newColorHistory.unshift(color)
       newColorHistory.pop()
+      setColorHistory(newColorHistory)
     }
-    setColorHistory(newColorHistory)
   }
 
   const pickFromHistory = (color: string) => {
