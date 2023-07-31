@@ -2,7 +2,9 @@ import { useEffect } from 'react'
 import { create } from 'zustand'
 
 const randomColor = () =>
-  `#${Math.floor(Math.random() * 16777215).toString(16)}`
+  '#000000'.replace(/0/g, function () {
+    return (~~(Math.random() * 16)).toString(16)
+  })
 
 const randomColors = (num: number) => {
   return Array.from({ length: num }, () => randomColor())

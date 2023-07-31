@@ -24,7 +24,7 @@ export const useSettingsStore = create<{
   agreedToTerms: false,
   setAgreedToTerms: (agreedToTerms) => set({ agreedToTerms }),
 
-  soundEnabled: true,
+  soundEnabled: process.env.NODE_ENV === `production` ? true : false,
   setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
 }))
 
@@ -37,7 +37,7 @@ export const useSettingsControls = () => {
     })
   )
   const [play] = useSound(`/sounds/hover.mp3`, {
-    volume: 0.25,
+    volume: 0.2,
     loop: false,
     interrupt: false,
     soundEnabled,
