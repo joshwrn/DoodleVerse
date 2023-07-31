@@ -66,11 +66,12 @@ const StyledTerms = styled.div`
 `
 
 export const SelectOverlay: FC = () => {
-  const { setAvatarSelected, avatarSelected, setAgreedToTerms } =
+  const { setAvatarSelected, avatarSelected, setAgreedToTerms, soundEnabled } =
     useSettingsStore((s) => ({
       setAvatarSelected: s.setAvatarSelected,
       avatarSelected: s.avatarSelected,
       setAgreedToTerms: s.setAgreedToTerms,
+      soundEnabled: s.soundEnabled,
     }))
 
   const { avatar } = usePlayerStore((s) => ({
@@ -83,6 +84,7 @@ export const SelectOverlay: FC = () => {
     volume: 0.5,
     loop: false,
     interrupt: true,
+    soundEnabled,
   })
 
   const agreeToTerms = () => {

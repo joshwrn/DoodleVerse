@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { PiPaintBrushDuotone } from 'react-icons/pi'
 import { AiOutlineUser } from 'react-icons/ai'
 import { usePlayerStore } from '@/state/settings/player'
+import { HiOutlineSpeakerXMark, HiOutlineSpeakerWave } from 'react-icons/hi2'
+import { useSettingsStore } from '@/state/settings/settings'
 
 const Wrapper = styled.div`
   position: absolute;
@@ -34,11 +36,16 @@ const SettingsContainer = styled.div`
   backdrop-filter: blur(10px);
   color: black;
   padding: 10px;
+  height: 40px;
+  min-width: 40px;
 `
 
 export const Hud: FC = () => {
   const { otherPlayers } = usePlayerStore((s) => ({
     otherPlayers: s.otherPlayers,
+  }))
+  const { soundEnabled } = useSettingsStore((s) => ({
+    soundEnabled: s.soundEnabled,
   }))
   return (
     <Wrapper>
@@ -46,6 +53,9 @@ export const Hud: FC = () => {
         <SettingsContainer>
           <AiOutlineUser />
           <p>{otherPlayers.length + 1}</p>
+        </SettingsContainer>
+        <SettingsContainer>
+          {soundEnabled ? <HiOutlineSpeakerWave /> : <HiOutlineSpeakerXMark />}
         </SettingsContainer>
         <SettingsContainer>
           <PiPaintBrushDuotone />

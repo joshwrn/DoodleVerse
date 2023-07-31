@@ -11,6 +11,9 @@ export const useSettingsStore = create<{
 
   agreedToTerms: boolean
   setAgreedToTerms: (agreedToTerms: boolean) => void
+
+  soundEnabled: boolean
+  setSoundEnabled: (soundEnabled: boolean) => void
 }>((set) => ({
   settingsOpen: false,
   setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
@@ -20,17 +23,24 @@ export const useSettingsStore = create<{
 
   agreedToTerms: false,
   setAgreedToTerms: (agreedToTerms) => set({ agreedToTerms }),
+
+  soundEnabled: true,
+  setSoundEnabled: (soundEnabled) => set({ soundEnabled }),
 }))
 
 export const useSettingsControls = () => {
-  const { setSettingsOpen, settingsOpen } = useSettingsStore((s) => ({
-    setSettingsOpen: s.setSettingsOpen,
-    settingsOpen: s.settingsOpen,
-  }))
+  const { setSettingsOpen, settingsOpen, soundEnabled } = useSettingsStore(
+    (s) => ({
+      setSettingsOpen: s.setSettingsOpen,
+      settingsOpen: s.settingsOpen,
+      soundEnabled: s.soundEnabled,
+    })
+  )
   const [play] = useSound(`/sounds/hover.mp3`, {
     volume: 0.25,
     loop: false,
     interrupt: false,
+    soundEnabled,
   })
   useHotkeys(
     [`tab`],

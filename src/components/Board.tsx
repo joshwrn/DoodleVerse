@@ -35,6 +35,24 @@ const raycaster = new THREE.Raycaster(
   MAX_DISTANCE_FROM_BOARD
 )
 
+const useDrawSound = (isDrawing: boolean) => {
+  const soundEnabled = useSettingsStore((s) => s.soundEnabled)
+  const [play, sound] = useSound(`/sounds/marker.wav`, {
+    volume: 0.03,
+    loop: true,
+    interrupt: true,
+    soundEnabled,
+  })
+
+  useEffect(() => {
+    if (isDrawing) {
+      play()
+    } else {
+      sound.stop()
+    }
+  }, [isDrawing])
+}
+
 export const Board = ({
   canvasNode: domNode,
 }: {
@@ -63,20 +81,7 @@ export const Board = ({
     settingsOpen: s.settingsOpen,
   }))
   const [isDrawing, setIsDrawing] = React.useState(false)
-
-  const [play, sound] = useSound(`/sounds/marker.wav`, {
-    volume: 0.03,
-    loop: true,
-    interrupt: true,
-  })
-
-  useEffect(() => {
-    if (isDrawing) {
-      play()
-    } else {
-      sound.stop()
-    }
-  }, [isDrawing])
+  useDrawSound(isDrawing)
 
   const socket = useSocketState((state) => state.socket)
 

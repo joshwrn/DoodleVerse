@@ -25,7 +25,7 @@ const Container = styled(motion.div)`
   min-width: 500px;
   max-width: 700px;
   background-color: rgba(255, 255, 255, 1);
-  height: 230px;
+  height: 250px;
   border-radius: 50px;
   padding: 50px;
   color: black;
@@ -129,9 +129,18 @@ export const SettingsOverlay: FC<{
       setColorHistory: s.setColorHistory,
     }
   })
-  const { setSettingsOpen, settingsOpen } = useSettingsStore((s) => ({
+  const {
+    setSettingsOpen,
+    settingsOpen,
+    soundEnabled,
+    setSoundEnabled,
+    agreedToTerms,
+  } = useSettingsStore((s) => ({
     setSettingsOpen: s.setSettingsOpen,
     settingsOpen: s.settingsOpen,
+    soundEnabled: s.soundEnabled,
+    setSoundEnabled: s.setSoundEnabled,
+    agreedToTerms: s.agreedToTerms,
   }))
 
   const emitPlayerEvent = useEmitPlayerEvent()
@@ -239,13 +248,24 @@ export const SettingsOverlay: FC<{
                       onChange={(e) => setBrushSize(parseInt(e.target.value))}
                     />
                   </Row>
+                  <Row>
+                    <p>Sound</p>
+                    <input
+                      type="checkbox"
+                      checked={soundEnabled}
+                      onChange={(e) => setSoundEnabled(e.target.checked)}
+                    />
+                  </Row>
                 </RowWrapper>
               </Container>
             </Wrapper>
           </>
         )}
       </AnimatePresence>
-      <Drawing show={settingsOpen} animate={{ opacity: settingsOpen ? 1 : 0 }}>
+      <Drawing
+        show={settingsOpen}
+        animate={{ opacity: settingsOpen && agreedToTerms ? 1 : 0 }}
+      >
         <canvas ref={onRefChange} />
       </Drawing>
     </>

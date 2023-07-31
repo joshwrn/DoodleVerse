@@ -36,21 +36,26 @@ const CanvasContainer = styled.main`
 
 const useMusic = () => {
   const [loaded, setLoaded] = useState(false)
+  const soundEnabled = useSettingsStore((s) => s.soundEnabled)
 
   const [play, sound] = useSound(`/sounds/lofi.mp3`, {
     volume: 0.08,
     loop: true,
     interrupt: true,
+    soundEnabled: soundEnabled,
     onload: () => {
       setLoaded(true)
     },
   })
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && soundEnabled) {
       play()
     }
-  }, [loaded])
+    if (!soundEnabled) {
+      sound.stop()
+    }
+  }, [loaded, soundEnabled, play])
 }
 
 export default function Home() {
@@ -107,9 +112,9 @@ export default function Home() {
       {agreedToTerms && (
         <>
           <Crosshair />
-          <Hud />
         </>
       )}
+      <Hud />
       <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{

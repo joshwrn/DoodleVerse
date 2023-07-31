@@ -9,11 +9,11 @@ const ControlsContainer = styled.div`
   justify-content: center;
   gap: 5px;
   flex-direction: column;
-  width: 230px;
+  width: 250px;
   background-color: rgba(255, 255, 255, 1);
   padding: 10px;
   border-radius: 50px;
-  height: 230px;
+  height: 250px;
   box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
   > div {
     display: flex;

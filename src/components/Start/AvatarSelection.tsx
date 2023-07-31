@@ -7,6 +7,7 @@ import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
 import useSound from 'use-sound'
+import { useSettingsStore } from '@/state/settings/settings'
 
 export const AvatarSelection: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
@@ -14,10 +15,12 @@ export const AvatarSelection: FC = () => {
     avatar: s.avatar,
   }))
   const [hoveredAvatar, setHoveredAvatar] = React.useState<number | null>(null)
+  const soundEnabled = useSettingsStore((s) => s.soundEnabled)
   const [play] = useSound(`/sounds/hover.mp3`, {
     volume: 0.25,
     loop: false,
     interrupt: false,
+    soundEnabled,
   })
   useEffect(() => {
     if (hoveredAvatar) {
