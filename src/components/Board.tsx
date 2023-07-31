@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber'
 import { Mesh, Vector3 } from 'three'
 import { useDrawStore } from '@/state/settings/draw'
@@ -16,6 +16,7 @@ import { useSettingsStore } from '@/state/settings/settings'
 import { Point2d } from '@/server/events/server/makeBrushStroke'
 import * as THREE from 'three'
 import { usePhysicsFrame } from '@/hooks/usePhysicsFrame'
+import useSound from 'use-sound'
 
 const convertVector3ToCanvasCoords = ({ point }: { point: Vector3 }) => {
   const x2d = point.x * CANVAS_TO_BOARD_RATIO
@@ -61,6 +62,21 @@ export const Board = ({
   const { settingsOpen } = useSettingsStore((s) => ({
     settingsOpen: s.settingsOpen,
   }))
+  const [isDrawing, setIsDrawing] = React.useState(false)
+
+  const [play, sound] = useSound(`/sounds/marker.mp3`, {
+    volume: 1,
+    loop: true,
+    interrupt: true,
+  })
+
+  useEffect(() => {
+    if (isDrawing) {
+      play()
+    } else {
+      sound.stop()
+    }
+  }, [isDrawing])
 
   const socket = useSocketState((state) => state.socket)
 
@@ -86,11 +102,15 @@ export const Board = ({
   const onLeave = () => {
     resetLastPosition()
     setDistance(null)
+    setIsDrawing(false)
   }
 
   const { camera, mouse } = useThree()
 
   usePhysicsFrame(({ shouldUpdate }) => {
+    if (!mouseDown && isDrawing) {
+      setIsDrawing(false)
+    }
     if (textureRef.current) {
       textureRef.current.needsUpdate = true
     }
@@ -126,6 +146,9 @@ export const Board = ({
     const { ctx } = checksBeforeDrawing(e, stroke) ?? {}
     const currentPosition = currentPositionRef.current
     if (!ctx || !currentPosition.x || !currentPosition.y || !socket) return
+    if (!isDrawing) {
+      setIsDrawing(true)
+    }
     const from =
       stroke === 'line'
         ? {

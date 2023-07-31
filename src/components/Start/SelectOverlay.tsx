@@ -5,6 +5,7 @@ import { useSettingsStore } from '@/state/settings/settings'
 import type { FC } from 'react'
 
 import styled from 'styled-components'
+import useSound from 'use-sound'
 
 const Header = styled.div`
   h1 {
@@ -78,7 +79,14 @@ export const SelectOverlay: FC = () => {
 
   const socket = useSocketState((s) => s.socket)
 
+  const [play] = useSound(`/sounds/button.mp3`, {
+    volume: 0.5,
+    loop: false,
+    interrupt: true,
+  })
+
   const agreeToTerms = () => {
+    play()
     setAgreedToTerms(true)
     if (!socket) return
     join(socket)
@@ -93,7 +101,10 @@ export const SelectOverlay: FC = () => {
           </FloatingHeader>
           <FloatingButton
             disabled={avatar === null}
-            onClick={() => setAvatarSelected(true)}
+            onClick={() => {
+              setAvatarSelected(true)
+              play()
+            }}
           >
             Continue
           </FloatingButton>

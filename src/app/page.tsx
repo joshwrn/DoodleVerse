@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Environment, Loader } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
@@ -20,6 +20,7 @@ import { AvatarSelection } from '@/components/Start/AvatarSelection'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
 import { OtherPlayers } from '@/components/OtherPlayers'
+import useSound from 'use-sound'
 
 const CanvasContainer = styled.main`
   width: 100vw;
@@ -33,6 +34,25 @@ const CanvasContainer = styled.main`
   }
 `
 
+const useMusic = () => {
+  const [loaded, setLoaded] = useState(false)
+
+  const [play, sound] = useSound(`/sounds/lofi.mp3`, {
+    volume: 0.1,
+    loop: true,
+    interrupt: true,
+    onload: () => {
+      setLoaded(true)
+    },
+  })
+
+  useEffect(() => {
+    if (loaded) {
+      play()
+    }
+  }, [loaded])
+}
+
 export default function Home() {
   const [canvasNode, setCanvasNode] = useState<HTMLCanvasElement | null>(null)
   useMouseDown()
@@ -42,6 +62,8 @@ export default function Home() {
     agreedToTerms: s.agreedToTerms,
     avatarSelected: s.avatarSelected,
   }))
+
+  useMusic()
 
   return (
     <CanvasContainer>

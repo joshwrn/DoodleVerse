@@ -6,6 +6,7 @@ import { Woman } from '../Avatar/Female'
 import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
+import useSound from 'use-sound'
 
 export const AvatarSelection: FC = () => {
   const { setAvatar, avatar } = usePlayerStore((s) => ({
@@ -13,6 +14,11 @@ export const AvatarSelection: FC = () => {
     avatar: s.avatar,
   }))
   const [hoveredAvatar, setHoveredAvatar] = React.useState<number | null>(null)
+  const [play] = useSound(`/sounds/hover.mp3`, {
+    volume: 0.5,
+    loop: false,
+    interrupt: true,
+  })
   useEffect(() => {
     if (hoveredAvatar) {
       document.body.style.cursor = 'pointer'
@@ -56,6 +62,7 @@ export const AvatarSelection: FC = () => {
           isSelection={true}
           onClick={() => {
             setAvatar(1)
+            play()
           }}
           onPointerOver={() => setHoveredAvatar(1)}
           onPointerOut={() => setHoveredAvatar(null)}
@@ -80,6 +87,7 @@ export const AvatarSelection: FC = () => {
           isSelection={true}
           onClick={() => {
             setAvatar(2)
+            play()
           }}
           onPointerOver={() => setHoveredAvatar(2)}
           onPointerOut={() => setHoveredAvatar(null)}

@@ -32,6 +32,7 @@
     "socket.io-client": "^4.7.1",
     "styled-components": "^6.0.0-rc.3",
     "three": "^0.153.0",
+    "use-sound": "^4.0.1",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
