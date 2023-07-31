@@ -146,10 +146,13 @@ export const SettingsOverlay: FC<{
   const emitPlayerEvent = useEmitPlayerEvent()
 
   const updateColorHistory = (color: string) => {
-    if (colorHistory.includes(color)) return
     const newColorHistory = [...colorHistory]
     newColorHistory.unshift(color)
-    newColorHistory.pop()
+    if (colorHistory.includes(color)) {
+      newColorHistory.filter((c) => c !== color)
+    } else {
+      newColorHistory.pop()
+    }
     setColorHistory(newColorHistory)
   }
 
