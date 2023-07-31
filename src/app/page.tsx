@@ -4,7 +4,7 @@ import { Environment, Loader } from '@react-three/drei'
 
 import { Canvas } from '@react-three/fiber'
 import styled from 'styled-components'
-import { Debug, Physics } from '@react-three/cannon'
+import { Physics } from '@react-three/cannon'
 import { Ground } from '@/components/Platform/Ground'
 import { Board } from '@/components/Board'
 import { Crosshair } from '@/components/Overlay/Crosshair'
@@ -19,7 +19,7 @@ import { GradientLighting, Gradients } from '@/components/Background'
 import { AvatarSelection } from '@/components/Start/AvatarSelection'
 import { SelectOverlay } from '@/components/Start/SelectOverlay'
 import { useSettingsStore } from '@/state/settings/settings'
-import { OtherPlayers } from '@/components/OtherPlayers'
+import { DebugPlayers, OtherPlayers } from '@/components/OtherPlayers'
 import useSound from 'use-sound'
 
 const CanvasContainer = styled.main`
@@ -115,6 +115,7 @@ export default function Home() {
         </>
       )}
       <Hud />
+      <DebugPlayers />
       <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{
