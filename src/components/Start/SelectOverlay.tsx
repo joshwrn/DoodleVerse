@@ -150,6 +150,20 @@ const Terms = () => {
         drawn over by someone else and will not be saved. Take a screenshot if
         you want to keep your drawing.
       </p>
+      <Line />
+      <p>
+        Avatars were downloaded from <span>Ready Player Me</span>
+        <p>
+          Music by
+          <span> Patricia Taxxon</span>
+        </p>
+      </p>
     </StyledTerms>
   )
 }
+
+const Line = styled.div`
+  width: 100%;
+  height: 1px;
+  background: white;
+`
