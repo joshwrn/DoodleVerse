@@ -115,7 +115,6 @@ export default function Home() {
         </>
       )}
       <Hud />
-      <DebugPlayers />
       <SettingsOverlay setCanvasNode={setCanvasNode} />
       <Loader
         containerStyles={{
