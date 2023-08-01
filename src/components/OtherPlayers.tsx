@@ -1,9 +1,9 @@
 import { Player, usePlayerStore } from '@/state/settings/player'
 import type { FC } from 'react'
 import React from 'react'
-import { Male } from './Avatar/Male'
-import { Woman } from './Avatar/Female'
 import { styled } from 'styled-components'
+import { WomanMesh } from './Avatar/WomanMesh'
+import { ManMesh } from './Avatar/ManMesh'
 
 const OtherPlayer = ({ player }: { player: Player }) => {
   return (
@@ -11,14 +11,10 @@ const OtherPlayer = ({ player }: { player: Player }) => {
       rotation={[0, player.rotationY, 0]}
       position={[player.position.x, 0, player.position.z]}
     >
-      {/* <mesh position={[0, 8, 1]} rotation={[0, 0, 0]} scale={4}>
-        <boxBufferGeometry args={[2, 0.5, 1]} />
-        <meshStandardMaterial color={player.brushColor} />
-      </mesh> */}
       {player.avatar === 1 ? (
-        <Male brushColor={player.brushColor} isSelection={false} />
+        <ManMesh brushColor={player.brushColor} />
       ) : (
-        <Woman brushColor={player.brushColor} isSelection={false} />
+        <WomanMesh brushColor={player.brushColor} />
       )}
     </group>
   )

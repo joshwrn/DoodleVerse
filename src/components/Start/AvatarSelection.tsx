@@ -1,8 +1,8 @@
 import type { FC } from 'react'
 import React, { useEffect } from 'react'
 
-import { Male } from '../Avatar/Male'
-import { Woman } from '../Avatar/Female'
+import { Male } from '../Avatar/Man'
+import { Woman } from '../Avatar/Woman'
 import { usePlayerStore } from '@/state/settings/player'
 import { motion } from 'framer-motion-3d'
 import { useSpring } from 'framer-motion'
