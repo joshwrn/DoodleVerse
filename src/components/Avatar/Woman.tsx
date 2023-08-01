@@ -84,7 +84,6 @@ export function Woman({
             castShadow
           />
         </group>
-        p
       </group>
     </group>
   )
