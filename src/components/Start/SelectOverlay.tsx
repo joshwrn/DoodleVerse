@@ -50,20 +50,6 @@ const Wrapper = styled.div`
   width: 90vw;
   max-width: 550px;
 `
-const StyledTerms = styled.div`
-  position: relative;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
-  p {
-    line-height: 1.5;
-  }
-  span {
-    font-weight: bold;
-  }
-`
 
 export const SelectOverlay: FC = () => {
   const { setAvatarSelected, avatarSelected, setAgreedToTerms, soundEnabled } =
@@ -153,14 +139,28 @@ const Terms = () => {
       <Line />
       <p>
         Avatars were downloaded from <span>Ready Player Me</span>
-        <p>
-          Music by
-          <span> Patricia Taxxon</span>
-        </p>
+        <br />
+        Music by
+        <span> Patricia Taxxon</span>
       </p>
     </StyledTerms>
   )
 }
+
+const StyledTerms = styled.div`
+  position: relative;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: center;
+  p {
+    line-height: 1.5;
+  }
+  span {
+    font-weight: bold;
+  }
+`
 
 const Line = styled.div`
   width: 100%;

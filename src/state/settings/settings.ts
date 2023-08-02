@@ -35,25 +35,17 @@ export const useSettingsStore = create<{
 }))
 
 export const useSettingsControls = () => {
-  const { setSettingsOpen, settingsOpen, soundEnabled } = useSettingsStore(
-    (s) => ({
-      setSettingsOpen: s.setSettingsOpen,
-      settingsOpen: s.settingsOpen,
-      soundEnabled: s.soundEnabled,
-    })
-  )
-  const [play] = useSound(`/sounds/hover.mp3`, {
-    volume: 0.2,
-    loop: false,
-    interrupt: false,
-    soundEnabled,
-  })
+  const { setSettingsOpen, settingsOpen } = useSettingsStore((s) => ({
+    setSettingsOpen: s.setSettingsOpen,
+    settingsOpen: s.settingsOpen,
+    soundEnabled: s.soundEnabled,
+  }))
+
   useHotkeys(
     [`tab`],
     (e) => {
       e.preventDefault()
       setSettingsOpen(!settingsOpen)
-      play()
     },
     {
       keydown: true,
