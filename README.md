@@ -1,8 +1,8 @@
 ## DoodleVerse
 
-DoodleVerse is a realtime multiplayer drawing game built with Next.js, socket.io, and React Three Fiber.
+DoodleVerse is a real-time multiplayer drawing game built with Next.js, socket.io, and React Three Fiber.
 
-### [Live Demo](https://doodleverse-e92281ac939a.herokuapp.com/)
+### [Live Demo](http://doodleverse.joshw.io/)
 
 ![DoodleVerse](https://i.imgur.com/bhhjAee.png)
 
